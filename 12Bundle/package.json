@@ -4,7 +4,7 @@
     "sptVersion": "~4.0",
     "loadBefore": [],
     "loadAfter": [],
-    "Incompatibilities": [],
+    "incompatibilities": [],
     "url": "https://github.com/sp-tarkov/server-csharp/tree/develop/ExampleMods/Mods",
     "isBundleMod": true,
     "author": "SPT",
