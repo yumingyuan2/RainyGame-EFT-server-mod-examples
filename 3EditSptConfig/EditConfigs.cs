@@ -1,9 +1,9 @@
-using Core.Models.Enums;
-using Core.Models.External;
-using Core.Models.Spt.Config;
-using Core.Models.Utils;
-using Core.Servers;
-using SptCommon.Annotations;
+using SPTarkov.Server.Core.Models.Enums;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Spt.Config;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Servers;
+using SPTarkov.Common.Annotations;
 
 namespace _3EditSptConfig;
 

@@ -1,8 +1,8 @@
-﻿using Core.Models.Utils;
-using Core.Servers;
-using Core.Services;
-using Core.Utils;
-using SptCommon.Annotations;
+﻿using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Servers;
+using SPTarkov.Server.Core.Services;
+using SPTarkov.Server.Core.Utils;
+using SPTarkov.Common.Annotations;
 
 namespace _6OverrideMethod
 {

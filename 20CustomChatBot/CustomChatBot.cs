@@ -1,9 +1,9 @@
-﻿using Core.Helpers.Dialogue;
-using Core.Models.Eft.Dialog;
-using Core.Models.Eft.Profile;
-using Core.Models.Enums;
-using Core.Services;
-using SptCommon.Annotations;
+﻿using SPTarkov.Server.Core.Helpers.Dialogue;
+using SPTarkov.Server.Core.Models.Eft.Dialog;
+using SPTarkov.Server.Core.Models.Eft.Profile;
+using SPTarkov.Server.Core.Models.Enums;
+using SPTarkov.Server.Core.Services;
+using SPTarkov.Common.Annotations;
 
 namespace _20CustomChatBot;
 

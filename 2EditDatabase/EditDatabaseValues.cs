@@ -1,8 +1,8 @@
-using Core.Models.Enums;
-using Core.Models.External;
-using Core.Models.Utils;
-using Core.Services;
-using SptCommon.Annotations;
+using SPTarkov.Server.Core.Models.Enums;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Services;
+using SPTarkov.Common.Annotations;
 
 namespace _2EditDatabase;
 

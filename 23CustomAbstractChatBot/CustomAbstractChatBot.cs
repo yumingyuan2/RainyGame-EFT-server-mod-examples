@@ -1,10 +1,10 @@
-﻿using Core.Helpers.Dialog.Commando;
-using Core.Helpers.Dialogue;
-using Core.Helpers.Dialogue.SPTFriend.Commands;
-using Core.Models.Eft.Profile;
-using Core.Models.Enums;
-using Core.Models.Utils;
-using Core.Services;
+﻿using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+using SPTarkov.Server.Core.Helpers.Dialogue;
+using SPTarkov.Server.Core.Helpers.Dialogue.SPTFriend.Commands;
+using SPTarkov.Server.Core.Models.Eft.Profile;
+using SPTarkov.Server.Core.Models.Enums;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Services;
 
 namespace _23CustomAbstractChatBot;
 

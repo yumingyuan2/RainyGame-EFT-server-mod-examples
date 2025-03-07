@@ -1,9 +1,9 @@
-﻿using Core.Helpers;
+﻿using SPTarkov.Server.Core.Helpers;
 using System.Reflection;
-using Core.Models.External;
-using Core.Models.Utils;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Utils;
 using fastJSON5;
-using SptCommon.Annotations;
+using SPTarkov.Common.Annotations;
 
 namespace _4ReadCustomJson5Config
 {

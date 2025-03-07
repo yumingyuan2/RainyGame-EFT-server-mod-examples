@@ -1,7 +1,7 @@
-using Core.Helpers.Dialog.Commando;
-using Core.Models.Eft.Dialog;
-using Core.Models.Eft.Profile;
-using Core.Services;
+using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+using SPTarkov.Server.Core.Models.Eft.Dialog;
+using SPTarkov.Server.Core.Models.Eft.Profile;
+using SPTarkov.Server.Core.Services;
 
 namespace _23CustomAbstractChatBot.Commands;
 

@@ -1,14 +1,14 @@
-﻿using Core.Helpers;
-using System.Reflection;
-using Core.Models.Eft.Common.Tables;
-using Core.Models.External;
-using Core.Models.Spt.Config;
-using Core.Models.Utils;
-using Core.Routers;
-using Core.Servers;
-using Core.Services;
-using Core.Utils.Cloners;
-using SptCommon.Annotations;
+﻿using System.Reflection;
+using SPTarkov.Common.Annotations;
+using SPTarkov.Server.Core.Helpers;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Spt.Config;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Routers;
+using SPTarkov.Server.Core.Servers;
+using SPTarkov.Server.Core.Services;
+using SPTarkov.Server.Core.Utils.Cloners;
 using Path = System.IO.Path;
 
 namespace _13AddTraderWithAssortJson;

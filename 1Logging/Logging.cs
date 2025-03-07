@@ -1,7 +1,7 @@
-using Core.Models.External;
-using Core.Models.Logging;
-using Core.Models.Utils;
-using SptCommon.Annotations;
+using SPTarkov.Common.Annotations;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Logging;
+using SPTarkov.Server.Core.Models.Utils;
 
 namespace _1Logging;
 

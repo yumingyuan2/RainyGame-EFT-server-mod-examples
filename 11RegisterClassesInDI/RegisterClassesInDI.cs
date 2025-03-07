@@ -1,6 +1,6 @@
-﻿using Core.Models.External;
-using Core.Models.Utils;
-using SptCommon.Annotations;
+﻿using SPTarkov.Common.Annotations;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Utils;
 
 namespace _11RegisterClassesInDI;
 

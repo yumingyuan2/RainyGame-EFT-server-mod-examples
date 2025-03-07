@@ -1,8 +1,8 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
-using Core.Models.Utils;
-using Core.Servers.Ws;
-using SptCommon.Annotations;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Servers.Ws;
+using SPTarkov.Common.Annotations;
 
 namespace _24Websocket;
 [Injectable(InjectionType = InjectionType.Singleton)]

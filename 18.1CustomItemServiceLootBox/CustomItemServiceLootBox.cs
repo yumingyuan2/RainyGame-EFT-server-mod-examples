@@ -1,11 +1,11 @@
-﻿using Core.Models.Eft.Common.Tables;
-using Core.Models.External;
-using Core.Models.Spt.Config;
-using Core.Models.Spt.Mod;
-using Core.Models.Utils;
-using Core.Servers;
-using Core.Services.Mod;
-using SptCommon.Annotations;
+﻿using SPTarkov.Common.Annotations;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Spt.Config;
+using SPTarkov.Server.Core.Models.Spt.Mod;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Servers;
+using SPTarkov.Server.Core.Services.Mod;
 
 namespace _18._1CustomItemServiceLootBox;
 

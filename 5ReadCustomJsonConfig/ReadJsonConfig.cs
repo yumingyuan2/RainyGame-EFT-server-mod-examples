@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Core.Helpers;
-using Core.Models.External;
-using Core.Models.Utils;
-using Core.Utils;
-using SptCommon.Annotations;
+using SPTarkov.Server.Core.Helpers;
+using SPTarkov.Server.Core.Models.External;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Utils;
+using SPTarkov.Common.Annotations;
 
 namespace _5ReadCustomJsonConfig
 {

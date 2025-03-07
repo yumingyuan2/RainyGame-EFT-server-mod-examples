@@ -1,9 +1,9 @@
-﻿using Core.Helpers.Dialog.Commando;
-using Core.Models.Eft.Dialog;
-using Core.Models.Eft.Profile;
-using Core.Servers;
-using Core.Services;
-using SptCommon.Annotations;
+﻿using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+using SPTarkov.Server.Core.Models.Eft.Dialog;
+using SPTarkov.Server.Core.Models.Eft.Profile;
+using SPTarkov.Server.Core.Servers;
+using SPTarkov.Server.Core.Services;
+using SPTarkov.Common.Annotations;
 
 namespace _21CustomCommandoCommand;
 

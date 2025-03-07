@@ -1,6 +1,6 @@
 using System.Text;
-using Core.Servers.Http;
-using SptCommon.Annotations;
+using SPTarkov.Common.Annotations;
+using SPTarkov.Server.Core.Servers.Http;
 
 namespace _15HttpListenerExample;
 

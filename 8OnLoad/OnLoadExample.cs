@@ -1,6 +1,6 @@
-﻿using Core.DI;
-using Core.Models.Utils;
-using SptCommon.Annotations;
+﻿using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Common.Annotations;
 
 namespace _8OnLoad
 {

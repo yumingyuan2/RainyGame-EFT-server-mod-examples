@@ -1,6 +1,6 @@
-﻿using Core.Models.Eft.Common.Tables;
-using Core.Models.Utils;
-using Core.Utils;
+﻿using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Utils;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 

@@ -1,6 +1,6 @@
 using System.Net.WebSockets;
-using Core.Models.Utils;
-using Core.Servers.Ws.Message;
+using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Servers.Ws.Message;
 
 namespace _24Websocket;
 

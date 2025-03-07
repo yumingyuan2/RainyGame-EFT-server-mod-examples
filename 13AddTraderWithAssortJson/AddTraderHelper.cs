@@ -1,9 +1,9 @@
-﻿using Core.Models.Common;
-using Core.Models.Eft.Common.Tables;
-using Core.Models.Spt.Config;
-using Core.Models.Spt.Server;
-using Core.Utils;
-using Core.Utils.Cloners;
+﻿
+using SPTarkov.Server.Core.Models.Common;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+using SPTarkov.Server.Core.Models.Spt.Config;
+using SPTarkov.Server.Core.Models.Spt.Server;
+using SPTarkov.Server.Core.Utils.Cloners;
 
 namespace _13AddTraderWithAssortJson
 {
