@@ -10,13 +10,17 @@ namespace _10CustomRoute;
 [Injectable(InjectableTypeOverride = typeof(StaticRouter))]
 public class CustomStaticRouter : StaticRouter
 {
+    private static HttpResponseUtil _httpResponseUtil;
+
     public CustomStaticRouter(
-        JsonUtil jsonUtil) : base(
+        JsonUtil jsonUtil,
+        HttpResponseUtil httpResponseUtil) : base(
         jsonUtil,
         // Add an array of routes we want to add
         GetCustomRoutes()
     )
     {
+        _httpResponseUtil = httpResponseUtil;
     }
 
     private static List<RouteAction> GetCustomRoutes()
@@ -39,7 +43,7 @@ public class CustomStaticRouter : StaticRouter
     {
         // Stuff goes here
 
-        return string.Empty;
+        return _httpResponseUtil.NullResponse();
     }
 }
 public class ExampleStaticRequestData : IRequestData
