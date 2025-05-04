@@ -1,10 +1,7 @@
 ﻿using SPTarkov.Common.Annotations;
-using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Utils;
-using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
-using SPTarkov.Server.Core.Utils;
 
 namespace _25AddCustomLocales;
 
@@ -31,11 +28,15 @@ public class AddCustomLocales : IPostSptLoadMod
     public void PostSptLoad()
     {
         // Add a custom locale to the en game locales
-        _localeService.AddCustomClientLocale("en", "TestingLocales", "This is a test locale");
+        _localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change of beta version warning");
+        _localeService.AddCustomClientLocale("en", "TestingLocales", "Testing Locales");
 
         _logger.Success("Added a custom locale to the database");
         Locales = _localeService.GetLocaleDb("en");
         // Log this so we can see it in the console
         _logger.Info(Locales["TestingLocales"]);
+        _logger.Info(Locales["Attention! This is a Beta version of Escape from Tarkov for testing purposes."]);
+        _localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change again of beta version warning");
+
     }
 }
