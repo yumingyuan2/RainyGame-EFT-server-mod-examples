@@ -1,16 +1,31 @@
 ﻿using SPTarkov.Server.Core.Models.Eft.Common.Tables;
-using SPTarkov.Server.Core.Models.External;
-using SPTarkov.Server.Core.Models.Logging;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services.Mod;
-using SPTarkov.Common.Annotations;
+using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 
 namespace _18CustomItemService;
 
-[Injectable]
-public class CustomItemServiceExample : IPostDBLoadMod, IPostSptLoadMod
+public record ModMetadata : AbstractModMetadata
+{
+    public override string Name { get; set; } = "CustomItemServiceExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+[Injectable(TypePriority = OnLoadOrder.PreSptModLoader + 1)]
+public class CustomItemServiceExample : IOnLoad
 {
     private readonly CustomItemService _customItemService;
     private readonly ISptLogger<CustomItemServiceExample> _logger;
@@ -26,8 +41,8 @@ public class CustomItemServiceExample : IPostDBLoadMod, IPostSptLoadMod
         _logger = logger;
         _databaseServer = databaseServer;
     }
-
-    public void PostDBLoad()
+    
+    public Task OnLoad()
     {
         //Example of adding new item by cloning an existing item using `createCloneDetails`
         var exampleCloneItem = new NewItemFromCloneDetails
@@ -101,19 +116,7 @@ public class CustomItemServiceExample : IPostDBLoadMod, IPostSptLoadMod
         };
 
         _customItemService.CreateItemFromClone(exampleCloneItem); // Send our data to the function that creates our item
-    }
-
-    // Optional - check if our item is in the server or not
-    public void PostSptLoad()
-    {
-        var items = _databaseServer.GetTables().Templates.Items;
-
-        if (items.TryGetValue("677eed5f2e040616bc7246b6", out var item))
-        {
-            _logger.LogWithColor("Item exists in DB", LogTextColor.Red, LogBackgroundColor.Yellow);
-            return;
-        }
-
-        _logger.LogWithColor("Item was not found in DB", LogTextColor.Red, LogBackgroundColor.Yellow);
+        
+        return Task.CompletedTask;
     }
 }

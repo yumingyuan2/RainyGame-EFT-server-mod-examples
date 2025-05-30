@@ -1,12 +1,29 @@
-﻿using SPTarkov.Common.Annotations;
-using SPTarkov.Server.Core.Models.External;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services;
 
 namespace _25AddCustomLocales;
 
-[Injectable]
-public class AddCustomLocales : IPostSptLoadMod
+public record ModMetadata : AbstractModMetadata
+{
+    public override string Name { get; set; } = "AddCustomLocalesExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+[Injectable(TypePriority = OnLoadOrder.PostSptModLoader + 1)]
+public class AddCustomLocales : IOnLoad
 {
     // Our logger we create in the constructor below
     private readonly ISptLogger<AddCustomLocales> _logger;
@@ -24,8 +41,8 @@ public class AddCustomLocales : IPostSptLoadMod
         // save the locale service into a private variable that is scoped to this class (only this class has access to it)
         _localeService = localeService;
     }
-
-    public void PostSptLoad()
+    
+    public Task OnLoad()
     {
         // Add a custom locale to the en game locales
         _localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change of beta version warning");
@@ -37,6 +54,7 @@ public class AddCustomLocales : IPostSptLoadMod
         _logger.Info(Locales["TestingLocales"]);
         _logger.Info(Locales["Attention! This is a Beta version of Escape from Tarkov for testing purposes."]);
         _localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change again of beta version warning");
-
+        
+        return Task.CompletedTask;
     }
 }

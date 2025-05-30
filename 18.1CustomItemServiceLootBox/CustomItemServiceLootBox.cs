@@ -1,6 +1,6 @@
-﻿using SPTarkov.Common.Annotations;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
-using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
@@ -9,8 +9,24 @@ using SPTarkov.Server.Core.Services.Mod;
 
 namespace _18._1CustomItemServiceLootBox;
 
-[Injectable]
-public class CustomItemServiceLootBox : IPostDBLoadMod, IPostSptLoadMod
+public record ModMetadata : AbstractModMetadata
+{
+    public override string Name { get; set; } = "CustomItemServiceLootBoxExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
+public class CustomItemServiceLootBox : IOnLoad
 {
     private CustomItemService _customItemService;
     private DatabaseServer _databaseServer;
@@ -34,8 +50,8 @@ public class CustomItemServiceLootBox : IPostDBLoadMod, IPostSptLoadMod
 
         _inventoryConfig = _configServer.GetConfig<InventoryConfig>();
     }
-
-    public void PostDBLoad()
+    
+    public Task OnLoad()
     {
         _itemDb = _databaseServer.GetTables().Templates.Items;
 
@@ -101,17 +117,7 @@ public class CustomItemServiceLootBox : IPostDBLoadMod, IPostSptLoadMod
                 {"544fb6cc4bdc2d34748b456e", 1}
             }
         };
-    }
-
-    // Check if our item is in the server or not
-    public void PostSptLoad()
-    {
-        if (_itemDb.TryGetValue("new_crate_with_randomized_content", out var crate))
-        {
-            _logger.LogWithColor("Item Exists in DB");
-            return;
-        }
-
-        _logger.LogWithColor("Item Doesn't Exist in DB");
+        
+       return Task.CompletedTask;
     }
 }

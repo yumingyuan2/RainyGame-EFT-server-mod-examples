@@ -1,14 +1,40 @@
 using SPTarkov.Server.Core.Models.Enums;
-using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Servers;
-using SPTarkov.Common.Annotations;
+using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 
 namespace _3EditSptConfig;
 
-[Injectable]
-public class EditConfigs : IPostDBLoadMod
+/// <summary>
+/// This is the replacement for the former package.json data. This is required for all mods.
+///
+/// This is where we define all the metadata associated with this mod.
+/// You don't have to do anything with it, other than fill it out.
+/// All properties must be overriden, properties you don't use may be left null.
+/// It is read by the mod loader when this mod is loaded.
+/// </summary>
+public record ModMetadata : AbstractModMetadata
+{
+    public override string Name { get; set; } = "EditConfigsExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+// We want to load after PostDBModLoader is complete, so we set our type priority to that, plus 1.
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
+public class EditConfigs : IOnLoad // Implement the IOnLoad interface so that this mod can do something
 {
     private readonly AirdropConfig _airdropConfig;
     private readonly BotConfig _botConfig;
@@ -39,8 +65,13 @@ public class EditConfigs : IPostDBLoadMod
         _questConfig = _configServer.GetConfig<QuestConfig>();
         _pmcConfig = _configServer.GetConfig<PmcConfig>();
     }
-
-    public void PostDBLoad()
+    
+    /// <summary>
+    /// This is called when this class is loaded, the order in which its loaded is set according to the type priority
+    /// on the [Injectable] attribute on this class. Each class can then be used as an entry point to do
+    /// things at varying times according to type priority
+    /// </summary>
+    public Task OnLoad()
     {
         // Let's edit the weather config to force the season to winter
         _weatherConfig.OverrideSeason = Season.WINTER;
@@ -72,5 +103,8 @@ public class EditConfigs : IPostDBLoadMod
         _botConfig.DisableLootOnBotTypes.Add("assault");
 
         _logger.Success("Finished Editing Configs");
+        
+        // Return a completed task
+        return Task.CompletedTask;
     }
 }

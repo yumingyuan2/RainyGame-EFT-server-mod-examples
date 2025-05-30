@@ -2,28 +2,52 @@
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils;
-using SPTarkov.Common.Annotations;
+using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 
-namespace _6OverrideMethod
+namespace _6OverrideMethod;
+
+/// <summary>
+/// This is the replacement for the former package.json data. This is required for all mods.
+///
+/// This is where we define all the metadata associated with this mod.
+/// You don't have to do anything with it, other than fill it out.
+/// All properties must be overriden, properties you don't use may be left null.
+/// It is read by the mod loader when this mod is loaded.
+/// </summary>
+public record ModMetadata : AbstractModMetadata
 {
-    [Injectable(InjectableTypeOverride = typeof(Watermark))]
-    public class OverrideMethod: Watermark
+    public override string Name { get; set; } = "OverrideMethodExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+[Injectable(InjectableTypeOverride = typeof(Watermark))]
+public class OverrideMethod : Watermark
+{
+    public OverrideMethod(
+        ISptLogger<Watermark> logger, // The logger needs to use the same type as the overriden type (in this case, Watermark)
+        ConfigServer configServer,
+        LocalisationService localisationService,
+        WatermarkLocale watermarkLocale)
+        : base(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
+    { }
+
+    public override void Initialize()
     {
-        public OverrideMethod(
-            ISptLogger<Watermark> logger, // The logger needs to use the same type as the overriden type (in this case, Watermark)
-            ConfigServer configServer,
-            LocalisationService localisationService,
-            WatermarkLocale watermarkLocale)
-            : base(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
-        { }
+        // We add a log message to the init method
+        _logger.Success("This is a watermark mod override!");
 
-        public override void Initialize()
-        {
-            // We add a log message to the init method
-            _logger.Success("This is a watermark mod override!");
-
-            // This runs the original method (optional)
-            base.Initialize();
-        }
+        // This runs the original method (optional)
+        base.Initialize();
     }
 }

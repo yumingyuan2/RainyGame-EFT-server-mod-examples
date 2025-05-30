@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
-using SPTarkov.Common.Annotations;
+using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Enums;
-using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Spt.Config;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Servers;
@@ -15,8 +16,24 @@ using Path = System.IO.Path;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
-[Injectable]
-public class AddTraderWithDynamicAssorts : IPostDBLoadMod
+public record ModMetadata : AbstractModMetadata
+{
+    public override string Name { get; set; } = "AddTraderWithDynamicAssortsExample";
+    public override string Author { get; set; } = "SPTarkov";
+    public override List<string>? Contributors { get; set; }
+    public override string Version { get; set; } = "1.0.0";
+    public override string SptVersion { get; set; } = "4.0.0";
+    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadAfter { get; set; }
+    public override List<string>? Incompatibilities { get; set; }
+    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override string? Url { get; set; }
+    public override bool? IsBundleMod { get; set; }
+    public override string? Licence { get; set; } = "MIT";
+}
+
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
+public class AddTraderWithDynamicAssorts : IOnLoad
 {
     private readonly ISptLogger<AddTraderWithDynamicAssorts> _logger;
     private readonly ModHelper _modHelper;
@@ -57,8 +74,8 @@ public class AddTraderWithDynamicAssorts : IPostDBLoadMod
         _traderConfig = _configServer.GetConfig<TraderConfig>();
         _ragfairConfig = _configServer.GetConfig<RagfairConfig>();
     }
-
-    public void PostDBLoad()
+    
+    public Task OnLoad()
     {
         var pathToMod = _modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
 
@@ -129,6 +146,8 @@ public class AddTraderWithDynamicAssorts : IPostDBLoadMod
             traderBase.Nickname,
             traderBase.Location,
             "This is the cat shop. Meow.");
+        
+        return Task.CompletedTask;
     }
 }
 
