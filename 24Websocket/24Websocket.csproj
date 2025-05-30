@@ -11,19 +11,10 @@
     <OutputPath>bin\$(Configuration)\$(ProjectName)\$(AssemblyName)-$(Version)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-
-
   <ItemGroup>
-    <Content Update="package.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SPTarkov.Common" Version="4.0.0-prerelease4" />
-    <PackageReference Include="SPTarkov.DI" Version="4.0.0-prerelease4" />
-    <PackageReference Include="SPTarkov.Server.Core" Version="4.0.0-prerelease4" />
+    <PackageReference Include="SPTarkov.Common" Version="4.0.0-prerelease7" />
+    <PackageReference Include="SPTarkov.DI" Version="4.0.0-prerelease7" />
+    <PackageReference Include="SPTarkov.Server.Core" Version="4.0.0-prerelease7" />
   </ItemGroup>
 
 </Project>
