@@ -34,15 +34,15 @@ public record ModMetadata : AbstractModMetadata
 public class RegisterClassesInDi : IOnLoad
 {
     private readonly SingletonClassExample _singletonClassExample;
-    private readonly TransientClassExample _transientClassExample;
+    private readonly ScopedClassExample _scopedClassExample;
 
-    // We inject 2 classes (singleton and transient) we've made below
+    // We inject 2 classes (singleton and scoped) we've made below
     public RegisterClassesInDi(
         SingletonClassExample singletonClassExample,
-        TransientClassExample transientClassExample)
+        ScopedClassExample scopedClassExample)
     {
         _singletonClassExample = singletonClassExample;
-        _transientClassExample = transientClassExample;
+        _scopedClassExample = scopedClassExample;
     }
     
     public Task OnLoad()
@@ -51,9 +51,9 @@ public class RegisterClassesInDi : IOnLoad
         _singletonClassExample.IncrementCounterAndLog();
         _singletonClassExample.IncrementCounterAndLog();
 
-        _transientClassExample.IncrementCounterAndLog();
-        _transientClassExample.IncrementCounterAndLog();
-        _transientClassExample.IncrementCounterAndLog();
+        _scopedClassExample.IncrementCounterAndLog();
+        _scopedClassExample.IncrementCounterAndLog();
+        _scopedClassExample.IncrementCounterAndLog();
         
         return Task.CompletedTask;
     }
@@ -81,16 +81,16 @@ public class SingletonClassExample
     }
 }
 
-// This class is being registered as default or transient. This means that
+// This class is being registered as default or scoped. This means that
 // every time a class requests an instance of this type a new one will be created
-[Injectable(InjectionType.Transient)] // [Injectable] is the same as doing this
-public class TransientClassExample
+[Injectable(InjectionType.Scoped)] // [Injectable] is the same as doing this
+public class ScopedClassExample
 {
-    private readonly ISptLogger<TransientClassExample> _logger;
+    private readonly ISptLogger<ScopedClassExample> _logger;
     private int _counter;
 
-    public TransientClassExample(
-        ISptLogger<TransientClassExample> logger)
+    public ScopedClassExample(
+        ISptLogger<ScopedClassExample> logger)
     {
         _logger = logger;
         _counter = 0;

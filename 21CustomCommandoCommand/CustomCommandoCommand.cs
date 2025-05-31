@@ -44,7 +44,7 @@ public class CustomCommandoCommand : IChatCommand
         return "test";
     }
 
-    public string? GetCommandHelp(string command)
+    public string GetCommandHelp(string command)
     {
         if (command == "talk")
         {
@@ -60,7 +60,7 @@ public class CustomCommandoCommand : IChatCommand
     }
 
     // spelling of sessionId is fixed in server
-    public string? Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public string Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         if (command == "talk")
         {

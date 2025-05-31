@@ -31,7 +31,7 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-[Injectable(InjectableTypeOverride = typeof(Watermark))]
+[Injectable]
 public class OverrideMethod : Watermark
 {
     public OverrideMethod(
@@ -41,13 +41,15 @@ public class OverrideMethod : Watermark
         WatermarkLocale watermarkLocale)
         : base(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
     { }
-
-    public override void Initialize()
+    
+    public override async Task OnLoad()
     {
         // We add a log message to the init method
         _logger.Success("This is a watermark mod override!");
-
+    
+        // perform any asynchronous operations here, using await
+    
         // This runs the original method (optional)
-        base.Initialize();
+        await base.OnLoad();
     }
 }

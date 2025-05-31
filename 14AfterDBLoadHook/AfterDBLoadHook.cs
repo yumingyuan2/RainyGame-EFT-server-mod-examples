@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Logging;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
@@ -23,9 +24,23 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-[Injectable(InjectableTypeOverride = typeof(IPostDBLoadMod))]
-[Injectable(InjectableTypeOverride = typeof(IPostSptLoadMod))]
-public class AfterDBLoadHook : IPostDBLoadMod, IPostSptLoadMod
+
+/// <summary>
+/// <b>*** OBSOLETE WARNING! ***</b>
+/// <br/>
+/// Interfaces <i>IPostDBLoadMod</i> and <i>IPostSptLoadMod</i> used to be used in TS to load mods after the database finished loading.
+/// Although still provided as Async variants, these are now deprecated and should not be used.
+/// They will be removed in version 4.1.0 - please use <i>IOnLoad</i> instead with the desired Injectable(TypePriority) as below:
+/// </summary>
+/// <code>
+/// [Injectable(TypePriority = OnLoadOrder.Database + 1)]
+/// public class MyMod : IOnLoad
+/// {
+///   // ... implementation
+/// }
+/// </code>
+[Injectable]
+public class AfterDBLoadHook : IPostDBLoadModAsync, IPostSptLoadModAsync
 {
     private readonly ConfigServer _configServer;
     private readonly DatabaseServer _databaseServer;
@@ -43,7 +58,7 @@ public class AfterDBLoadHook : IPostDBLoadMod, IPostSptLoadMod
         _logger = logger;
     }
 
-    public void PostDBLoad()
+    public Task PostDBLoadAsync()
     {
         _itemsDb = _databaseServer.GetTables().Templates.Items;
 
@@ -62,9 +77,11 @@ public class AfterDBLoadHook : IPostDBLoadMod, IPostSptLoadMod
             // Update one of its properties to be true
             nvgs.Properties.CanSellOnRagfair = true;
         }
+        
+        return Task.CompletedTask;
     }
 
-    public void PostSptLoad()
+    public Task PostSptLoadAsync()
     {
         // The modification we made above would have been processed by now by SPT, so any values we changed had
         // already been passed through the initial lifecycles (OnLoad) of SPT.
@@ -74,5 +91,7 @@ public class AfterDBLoadHook : IPostDBLoadMod, IPostSptLoadMod
             // Lets log the state after the modification
             _logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
         }
+        
+        return Task.CompletedTask;
     }
 }

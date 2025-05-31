@@ -29,9 +29,8 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-// Flag class as being OnLoad and give it a load priority, check `OnLoadOrder` for list of possible choices
-[Injectable(InjectableTypeOverride = typeof(IOnUpdate), TypePriority = OnUpdateOrder.PostSptUpdate)] // Can also give it an int value for more fine-grained control
-[Injectable(InjectableTypeOverride = typeof(OnUpdateExample))]
+// Check `OnUpdateOrder` for list of possible choices
+[Injectable(TypePriority = OnUpdateOrder.InsuranceCallbacks)] // Can also give it an int value for more fine-grained control
 public class OnUpdateExample : IOnUpdate // Must implement the IOnUpdate interface
 {
     private readonly ISptLogger<OnUpdateExample> _logger;
@@ -45,7 +44,7 @@ public class OnUpdateExample : IOnUpdate // Must implement the IOnUpdate interfa
     public bool OnUpdate(long timeSinceLastRun)
     {
         // Can do work here
-        _logger.Success($"Mod running update after SPT updates have run!");
+        _logger.Success($"Mod running update after insurance callbacks have run!");
 
         return true; // Return true for a success, false for failure
     }
