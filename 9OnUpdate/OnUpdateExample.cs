@@ -44,7 +44,7 @@ public class OnUpdateExample : IOnUpdate // Must implement the IOnUpdate interfa
     public bool OnUpdate(long timeSinceLastRun)
     {
         // Can do work here
-        _logger.Success($"Mod running update after insurance callbacks have fun!");
+        _logger.Success($"Mod running update after insurance callbacks have run!");
 
         return true; // Return true for a success, false for failure
     }
