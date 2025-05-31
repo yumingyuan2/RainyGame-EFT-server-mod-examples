@@ -21,7 +21,7 @@ public class AnotherCoolCommand : IChatCommand
         return "anotherExample";
     }
 
-    public string? GetCommandHelp(string command)
+    public string GetCommandHelp(string command)
     {
         if (command == "test")
         {
@@ -36,7 +36,7 @@ public class AnotherCoolCommand : IChatCommand
         return ["test"];
     }
 
-    public string? Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public string Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         if (command == "test")
         {

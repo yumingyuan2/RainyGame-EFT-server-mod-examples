@@ -30,8 +30,7 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-// Flag our mod as a type of static router
-[Injectable(InjectableTypeOverride = typeof(StaticRouter))]
+[Injectable]
 public class CustomStaticRouter : StaticRouter
 {
     private static HttpResponseUtil _httpResponseUtil;
