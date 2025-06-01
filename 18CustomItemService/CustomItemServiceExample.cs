@@ -24,7 +24,7 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-[Injectable(TypePriority = OnLoadOrder.PreSptModLoader + 1)]
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class CustomItemServiceExample : IOnLoad
 {
     private readonly CustomItemService _customItemService;
