@@ -10,7 +10,7 @@ public class FluentTraderAssortCreator
     private readonly HashUtil _hashUtil;
 
     private readonly List<Item> _itemsToSell = [];
-    private readonly Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
+    private Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
     private readonly Dictionary<string, int> _loyaltyLevel = new();
 
     public FluentTraderAssortCreator(
@@ -102,7 +102,10 @@ public class FluentTraderAssortCreator
             Template = currencyType
         };
 
-        _barterScheme.Add(_itemsToSell[0].Id, [[dataToAdd]]);
+        if (!_barterScheme.TryAdd(_itemsToSell[0].Id, [[dataToAdd]]))
+        {
+            _logger.Warning($"Unable to add barter scheme currency: {currencyType}");
+        }
 
         return this;
     }
@@ -128,7 +131,7 @@ public class FluentTraderAssortCreator
             var existingData = _barterScheme[sellableItemId][0].FirstOrDefault(x => x.Template == itemTpl);
             if (existingData is not null)
             {
-                // itemtpl already a barter for item, add to count
+                // itemTpl already a barter for item, add to count
                 existingData.Count += count;
             }
             else
@@ -149,19 +152,23 @@ public class FluentTraderAssortCreator
      * Reset objet ready for reuse
      * @returns
      */
-    public FluentTraderAssortCreator? Export(Trader data)
+    public FluentTraderAssortCreator? Export(Trader traderData)
     {
-        var itemBeingSoldId = _itemsToSell[0].Id;
-        if (!data.Assort.Items.Exists(x => x.Id == itemBeingSoldId))
+        var rootItemAddedId = _itemsToSell.FirstOrDefault().Id;
+        if (traderData.Assort.Items.Exists(x => x.Id == rootItemAddedId))
         {
-            _logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already used");
+            _logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already in use");
+
+            _itemsToSell.Clear();
+            _barterScheme.Clear();
+            _loyaltyLevel.Clear();
 
             return null;
         }
 
-        data.Assort.Items.AddRange(_itemsToSell);
-        data.Assort.BarterScheme[itemBeingSoldId] = _barterScheme[itemBeingSoldId];
-        data.Assort.LoyalLevelItems[itemBeingSoldId] = _loyaltyLevel[itemBeingSoldId];
+        traderData.Assort.Items.AddRange(_itemsToSell);
+        traderData.Assort.BarterScheme[rootItemAddedId] = _barterScheme[rootItemAddedId];
+        traderData.Assort.LoyalLevelItems[rootItemAddedId] = _loyaltyLevel[rootItemAddedId];
 
         _itemsToSell.Clear();
         _barterScheme.Clear();

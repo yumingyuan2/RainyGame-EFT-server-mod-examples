@@ -32,17 +32,17 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
+// This line tells the class to load right after "PostDBModLoader" occurs
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class AddTraderWithDynamicAssorts : IOnLoad
 {
     private readonly ISptLogger<AddTraderWithDynamicAssorts> _logger;
     private readonly ModHelper _modHelper;
     private readonly HashUtil _hashUtil;
-    private readonly JsonUtil _jsonUtil;
-    private readonly FileUtil _fileUtil;
     private readonly DatabaseService _databaseService;
     private readonly ImageRouter _imageRouter;
     private readonly ConfigServer _configServer;
+    private readonly LocaleService _localeService;
     private readonly ICloner _cloner;
     private readonly TraderConfig _traderConfig;
     private readonly RagfairConfig _ragfairConfig;
@@ -54,21 +54,19 @@ public class AddTraderWithDynamicAssorts : IOnLoad
         ISptLogger<AddTraderWithDynamicAssorts> logger,
         ModHelper modHelper,
         HashUtil hashUtil,
-        JsonUtil jsonUtil,
-        FileUtil fileUtil,
         DatabaseService databaseService,
         ImageRouter imageRouter,
         ConfigServer configServer,
+        LocaleService localeService,
         ICloner cloner        )
     {
         _logger = logger;
         _modHelper = modHelper;
         _hashUtil = hashUtil;
-        _jsonUtil = jsonUtil;
-        _fileUtil = fileUtil;
         _databaseService = databaseService;
         _imageRouter = imageRouter;
         _configServer = configServer;
+        _localeService = localeService;
         _cloner = cloner;
 
         _traderConfig = _configServer.GetConfig<TraderConfig>();
@@ -77,67 +75,43 @@ public class AddTraderWithDynamicAssorts : IOnLoad
     
     public Task OnLoad()
     {
+        // A path to the mods files we use below
         var pathToMod = _modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
 
+        // A relative path to the trader icon to show
         var traderImagePath = Path.Combine(pathToMod, "db/cat.jpg");
+
+        // The base json containing trader settings we will add to the server
         var traderBase = _modHelper.GetJsonDataFromFile<TraderBase>(pathToMod, "db/base.json");
 
-        // Create helper class and use it to register our traders image/icon + set its stock refresh time
-        var addTraderHelper = new AddTraderHelper();
+        // Create a helper class and use it to register our traders image/icon + set its stock refresh time
+        var addTraderHelper = new AddTraderHelper(_localeService);
         _imageRouter.AddRoute(traderBase.Avatar.Replace(".jpg", ""), traderImagePath);
         addTraderHelper.SetTraderUpdateTime(_traderConfig, traderBase, 3600, 4000);
 
-        // Add trader to flea market
-        _ragfairConfig.Traders[traderBase.Id] = true;
+        // Add our trader to the config list, this lets it be seen by the flea market
+        _ragfairConfig.Traders.TryAdd(traderBase.Id, true);
 
-        // Get a reference to the database tables
-        var tables = _databaseService.GetTables();
+        // Get the database files
+        var dbTables = _databaseService.GetTables();
 
+        // Create an empty assort ready for our items
+        var emptyTraderItemAssortObject = new TraderAssort
+        {
+            Items = [],
+            BarterScheme = new Dictionary<string, List<List<BarterScheme>>>(),
+            LoyalLevelItems = new Dictionary<string, int>()
+        };
+
+        // Add our trader (with no items yet) to the server database
         addTraderHelper.AddTraderToDb(
             traderBase,
-            _databaseService.GetTables(),
+            dbTables,
             _cloner,
-            new TraderAssort {Items = [], BarterScheme = new Dictionary<string, List<List<BarterScheme>>>(), LoyalLevelItems = new Dictionary<string, int>()});
-        _logger.Success("added trader base");
-        var fluentAssortCreator = new FluentTraderAssortCreator(_logger, _hashUtil);
+            emptyTraderItemAssortObject
+            );
 
-        // Add milk
-        fluentAssortCreator
-            .CreateSingleAssortItem(ItemTpl.DRINK_PACK_OF_MILK)
-            .AddStackCount(200)
-            .AddBuyRestriction(10)
-            .AddMoneyCost(Money.ROUBLES, 2000)
-            .AddLoyaltyLevel(1)
-            .Export(tables.Traders[traderBase.Id]);
-
-        // Add 3x bitcoin + salewa for milk barter
-        fluentAssortCreator
-            .CreateSingleAssortItem(ItemTpl.DRINK_PACK_OF_MILK)
-            .AddStackCount(100)
-            .AddBarterCost(ItemTpl.BARTER_PHYSICAL_BITCOIN, 3)
-            .AddBarterCost(ItemTpl.MEDKIT_SALEWA_FIRST_AID_KIT, 1)
-            .AddLoyaltyLevel(1)
-            .Export(tables.Traders[traderBase.Id]);
-
-
-        // Add glock as a money purchase
-        fluentAssortCreator
-            .CreateComplexAssortItem(addTraderHelper.CreateGlock())
-            .AddUnlimitedStackCount()
-            .AddMoneyCost(Money.ROUBLES, 20000)
-            .AddBuyRestriction(3)
-            .AddLoyaltyLevel(1)
-            .Export(tables.Traders[traderBase.Id]);
-
-        // Add mp133 preset as a barter for mayonase
-        fluentAssortCreator
-            .CreateComplexAssortItem(tables.Globals.ItemPresets["584148f2245977598f1ad387"].Items) // Weapon preset id comes from globals.json
-            .AddStackCount(200)
-            .AddBarterCost(ItemTpl.FOOD_JAR_OF_DEVILDOG_MAYO, 1)
-            .AddBuyRestriction(3)
-            .AddLoyaltyLevel(1)
-            .Export(tables.Traders[traderBase.Id]);
-
+        // Add localisation text for our trader to the database so it shows to people playing in different languages
         addTraderHelper.AddTraderToLocales(
             traderBase,
             _databaseService.GetTables(),
@@ -146,7 +120,53 @@ public class AddTraderWithDynamicAssorts : IOnLoad
             traderBase.Nickname,
             traderBase.Location,
             "This is the cat shop. Meow.");
-        
+
+        //Create a helper class to assist us with making items for our trader
+        // It's called 'fluent' as it's a technical term to describe how it can "chain" methods together
+        var fluentAssortCreator = new FluentTraderAssortCreator(_logger, _hashUtil);
+
+        // Add a single "milk" for 2000 roubles that player can buy a max of 10 per refresh
+        fluentAssortCreator
+            .CreateSingleAssortItem(ItemTpl.DRINK_PACK_OF_MILK)
+            .AddStackCount(200)
+            .AddBuyRestriction(10)
+            .AddMoneyCost(Money.ROUBLES, 2000)
+            .AddLoyaltyLevel(1)
+            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+
+        // Add a 3x bitcoin + salewa for milk barter
+        fluentAssortCreator
+            .CreateSingleAssortItem(ItemTpl.DRINK_PACK_OF_MILK)
+            .AddStackCount(100)
+            .AddBarterCost(ItemTpl.BARTER_PHYSICAL_BITCOIN, 3)
+            .AddBarterCost(ItemTpl.MEDKIT_SALEWA_FIRST_AID_KIT, 1)
+            .AddLoyaltyLevel(1)
+            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+
+
+        // Add glock as a rouble purchase
+        fluentAssortCreator
+            .CreateComplexAssortItem(addTraderHelper.CreateGlock())
+            .AddUnlimitedStackCount()
+            .AddMoneyCost(Money.ROUBLES, 20000)
+            .AddBuyRestriction(3)
+            .AddLoyaltyLevel(1)
+            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+
+        // Add mp133 preset as a barter for mayonnaise
+        var mp133BarterId = "584148f2245977598f1ad387"; // This preset id comes from globals.json
+        fluentAssortCreator
+            .CreateComplexAssortItem(dbTables.Globals.ItemPresets.GetValueOrDefault(mp133BarterId).Items) 
+            .AddStackCount(200)
+            .AddBarterCost(ItemTpl.FOOD_JAR_OF_DEVILDOG_MAYO, 1)
+            .AddBuyRestriction(3)
+            .AddLoyaltyLevel(1)
+            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+
+        // Happy little log message
+        _logger.Success("Added Cat trader to server");
+
+        // Send back a success to the server to say our trader is good to go
         return Task.CompletedTask;
     }
 }

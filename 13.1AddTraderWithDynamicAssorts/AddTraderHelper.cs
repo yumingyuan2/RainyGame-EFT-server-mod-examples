@@ -2,12 +2,20 @@
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Models.Spt.Server;
+using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils.Cloners;
 
 namespace _13._1AddTraderWithDynamicAssorts
 {
     public class AddTraderHelper
     {
+        private readonly LocaleService _localeService;
+
+        public AddTraderHelper(LocaleService localeService)
+        {
+            _localeService = localeService;
+        }
+
         /**
      * Add record to trader config to set the refresh time of trader in seconds (default is 60 minutes)
      * @param traderConfig trader config to add our trader to
@@ -50,42 +58,47 @@ namespace _13._1AddTraderWithDynamicAssorts
         };
 
         // Add trader to trader table, key is the traders id
-        tables.Traders.Add(traderDetailsToAdd.Id, traderDataToAdd);
+        if (!tables.Traders.TryAdd(traderDetailsToAdd.Id, traderDataToAdd))
+        {
+            //Failed to add trader!
+        }
     }
 
-    /**
-     * Add traders name/location/description to the locale table
-     * @param baseJson json file for trader (db/base.json)
-     * @param tables database tables
-     * @param fullName Complete name of trader
-     * @param firstName First name of trader
-     * @param nickName Nickname of trader
-     * @param location Location of trader (e.g. "Here in the cat shop")
-     * @param description Description of trader
-     */
-    public void AddTraderToLocales(TraderBase baseJson, DatabaseTables tables, string fullName, string firstName, string nickName, string location, string description)
+        /// <summary>
+        /// Add traders name/location/description to all locales (e.g. German/French/English)
+        /// </summary>
+        /// <param name="baseJson">json file for trader (db/base.json)</param>
+        /// <param name="tables">Database tables</param>
+        /// <param name="fullName">Complete name of trader</param>
+        /// <param name="firstName">First name of trader</param>
+        /// <param name="nickName">Nickname of trader</param>
+        /// <param name="location">Flavor text of the location of trader (e.g. "Here in the cat shop")</param>
+        /// <param name="description">Flavor text of whom the trader is</param>
+        public void AddTraderToLocales(TraderBase baseJson, DatabaseTables tables, string fullName, string firstName, string nickName, string location, string description)
     {
         // For each language, add locale for the new trader
         var locales = tables.Locales.Global;
+        var newTraderId = baseJson.Id;
 
-        foreach (var (key, value) in locales) {
-            value.Value[$"{baseJson.Id} FullName"] = fullName;
-            value.Value[$"{baseJson.Id} FirstName"] = firstName;
-            value.Value[$"{baseJson.Id} Nickname"] = nickName;
-            value.Value[$"{baseJson.Id} Location"] = location;
-            value.Value[$"{baseJson.Id} Description"] = description;
+        foreach (var (localeKey, localeKvP) in locales)
+        {
+            _localeService.AddCustomClientLocale(localeKey, $"{newTraderId} FullName", fullName);
+            _localeService.AddCustomClientLocale(localeKey, $"{newTraderId} FirstName", firstName);
+            _localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Nickname", nickName);
+            _localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Location", location);
+            _localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Description", description);
         }
     }
 
     public List<Item> CreateGlock()
     {
-            // Create an array ready to hold weapon + all mods
+            // Create an array ready to hold the glock and all its mods
             var glock = new List<Item>();
 
-            // Add the base first
+            // Add the base (root) first
             glock.Add(new Item { // Add the base weapon first
             Id =
-                NewItemIds.GLOCK_BASE, // Ids matter, MUST BE UNIQUE
+                NewItemIds.GLOCK_BASE, // Ids matter, Ids MUST be unique for every item
             Template =
                 "5a7ae0c351dfba0017554310", // This is the weapons tpl, found on: https://db.sp-tarkov.com/search
         });
