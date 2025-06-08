@@ -51,16 +51,14 @@ public class CustomWebSocketConnectionHandler : IWebSocketConnectionHandler
         return Task.CompletedTask;
     }
 
-    public Task OnMessage(byte[] rawData, WebSocketMessageType messageType, WebSocket ws, HttpContext context)
+    public async Task OnMessage(byte[] rawData, WebSocketMessageType messageType, WebSocket ws, HttpContext context)
     {
         var msg = Encoding.UTF8.GetString(rawData);
 
         if (msg == "toodaloo")
         {
-            return ws.SendAsync(Encoding.UTF8.GetBytes("toodaloo back!"), WebSocketMessageType.Text, true, CancellationToken.None);
+            await ws.SendAsync(Encoding.UTF8.GetBytes("toodaloo back!"), WebSocketMessageType.Text, true, CancellationToken.None);
         }
-
-        return Task.CompletedTask;
     }
 
     public Task OnClose(WebSocket ws, HttpContext context, string sessionIdContext)

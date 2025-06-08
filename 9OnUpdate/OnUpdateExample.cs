@@ -41,12 +41,12 @@ public class OnUpdateExample : IOnUpdate // Must implement the IOnUpdate interfa
         _logger = logger;
     }
 
-    public bool OnUpdate(long timeSinceLastRun)
+    public Task<bool> OnUpdate(long timeSinceLastRun)
     {
         // Can do work here
         _logger.Success($"Mod running update after insurance callbacks have run!");
 
-        return true; // Return true for a success, false for failure
+        return Task.FromResult(true); // Return true for a success, false for failure
     }
 
     public string GetRoute()

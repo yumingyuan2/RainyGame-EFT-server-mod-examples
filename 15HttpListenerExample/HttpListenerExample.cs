@@ -28,13 +28,11 @@ public class HttpListenerExample : IHttpListener
         return req.Method == "GET" && req.Method.Contains("/type-custom-url");
     }
 
-    public Task Handle(string sessionId, HttpRequest req, HttpResponse resp)
+    public async Task Handle(string sessionId, HttpRequest req, HttpResponse resp)
     {
         resp.StatusCode = 200;
-        resp.Body.WriteAsync("[1] This is the first example of a mod hooking into the HttpServer"u8.ToArray()).AsTask().Wait();
-        resp.StartAsync().Wait();
-        resp.CompleteAsync().Wait();
-        
-        return Task.CompletedTask;
+        await resp.Body.WriteAsync("[1] This is the first example of a mod hooking into the HttpServer"u8.ToArray());
+        await resp.StartAsync();
+        await resp.CompleteAsync();
     }
 }

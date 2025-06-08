@@ -52,21 +52,21 @@ public class CustomStaticRouter : StaticRouter
         [
             new RouteAction(
                 "/example/route/static",
-                (
+                async (
                     url,
                     info,
                     sessionId,
                     output
-                ) => HandleRoute(url, info as ExampleStaticRequestData, sessionId)
+                ) => await HandleRoute(url, info as ExampleStaticRequestData, sessionId)
             )
         ];
     }
 
-    private static string HandleRoute(string url, ExampleStaticRequestData info, string sessionId)
+    private static ValueTask<string> HandleRoute(string url, ExampleStaticRequestData info, string sessionId)
     {
         // Stuff goes here
 
-        return _httpResponseUtil.NullResponse();
+        return new ValueTask<string>(_httpResponseUtil.NullResponse());
     }
 }
 public class ExampleStaticRequestData : IRequestData
