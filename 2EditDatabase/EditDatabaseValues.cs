@@ -127,12 +127,12 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
         // We want the areas, they're stored in a list
         var hideoutAreas = hideout.Areas;
 
-        // We find the toilet, we use 'firstOrDefault', if we cant find the lavatory, 'lavatoryArea' will be null
-        var lavatoryArea = hideoutAreas.FirstOrDefault(area => area.Type == HideoutAreas.LAVATORY);
+        // We find the toilet, we use 'firstOrDefault', if we cant find the watercloset, 'waterclosetArea' will be null
+        var waterclosetArea = hideoutAreas.FirstOrDefault(area => area.Type == HideoutAreas.WaterCloset);
 
 
         // Now we have the toilet, we can find the requirements to craft, all data is stored by stage
-        var toiletStages = lavatoryArea.Stages;
+        var toiletStages = waterclosetArea.Stages;
 
         // Stages are stored in a dictionary, a dictionary has a 'key' and a 'value'
         // In this case, the 'key' is the upgrade stage, e.g. "1", or "2"
