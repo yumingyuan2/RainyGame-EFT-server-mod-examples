@@ -63,7 +63,7 @@ public class StartAsyncPatch : AbstractPatch
 
         // You can perform any code here before the method actually runs
 
-        // This runs the original method, can be set to false to skip.
+        // This runs the original method, can be set to false to skip running the original method.
         return true;
     }
 
