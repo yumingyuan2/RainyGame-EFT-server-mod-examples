@@ -11,7 +11,6 @@ using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils;
-using SPTarkov.Server.Core.Utils.Cloners;
 using Path = System.IO.Path;
 
 namespace _13._1AddTraderWithDynamicAssorts;
@@ -34,96 +33,48 @@ public record ModMetadata : AbstractModMetadata
 
 // This line tells the class to load right after "PostDBModLoader" occurs
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
-public class AddTraderWithDynamicAssorts : IOnLoad
+public class AddTraderWithDynamicAssorts(
+    ISptLogger<AddTraderWithDynamicAssorts> logger,
+    ModHelper modHelper,
+    DatabaseService databaseService,
+    ImageRouter imageRouter,
+    ConfigServer configServer,
+    TimeUtil timeUtil,
+    FluentTraderAssortCreator fluentAssortCreator, // This is a custom class we add for this mod, we made it injectable so it can be accessed like other classes here
+    AddCustomTraderHelper addCustomTraderHelper // This is a custom class we add for this mod, we made it injectable so it can be accessed like other classes here
+    )
+    : IOnLoad
 {
-    private readonly ISptLogger<AddTraderWithDynamicAssorts> _logger;
-    private readonly ModHelper _modHelper;
-    private readonly HashUtil _hashUtil;
-    private readonly DatabaseService _databaseService;
-    private readonly ImageRouter _imageRouter;
-    private readonly ConfigServer _configServer;
-    private readonly LocaleService _localeService;
-    private readonly ICloner _cloner;
-    private readonly TraderConfig _traderConfig;
-    private readonly RagfairConfig _ragfairConfig;
+    private readonly TraderConfig _traderConfig = configServer.GetConfig<TraderConfig>();
+    private readonly RagfairConfig _ragfairConfig = configServer.GetConfig<RagfairConfig>();
 
-    // This MUST match the folder name of the mod in the user/mods folder
-    private const string _modName = "13.1AddTraderWithDynamicAssorts";
-
-    public AddTraderWithDynamicAssorts(
-        ISptLogger<AddTraderWithDynamicAssorts> logger,
-        ModHelper modHelper,
-        HashUtil hashUtil,
-        DatabaseService databaseService,
-        ImageRouter imageRouter,
-        ConfigServer configServer,
-        LocaleService localeService,
-        ICloner cloner        )
-    {
-        _logger = logger;
-        _modHelper = modHelper;
-        _hashUtil = hashUtil;
-        _databaseService = databaseService;
-        _imageRouter = imageRouter;
-        _configServer = configServer;
-        _localeService = localeService;
-        _cloner = cloner;
-
-        _traderConfig = _configServer.GetConfig<TraderConfig>();
-        _ragfairConfig = _configServer.GetConfig<RagfairConfig>();
-    }
-    
     public Task OnLoad()
     {
         // A path to the mods files we use below
-        var pathToMod = _modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
+        var pathToMod = modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
 
         // A relative path to the trader icon to show
         var traderImagePath = Path.Combine(pathToMod, "db/cat.jpg");
 
         // The base json containing trader settings we will add to the server
-        var traderBase = _modHelper.GetJsonDataFromFile<TraderBase>(pathToMod, "db/base.json");
+        var traderBase = modHelper.GetJsonDataFromFile<TraderBase>(pathToMod, "db/base.json");
 
         // Create a helper class and use it to register our traders image/icon + set its stock refresh time
-        var addTraderHelper = new AddTraderHelper(_localeService);
-        _imageRouter.AddRoute(traderBase.Avatar.Replace(".jpg", ""), traderImagePath);
-        addTraderHelper.SetTraderUpdateTime(_traderConfig, traderBase, 3600, 4000);
+        imageRouter.AddRoute(traderBase.Avatar.Replace(".jpg", ""), traderImagePath);
+        addCustomTraderHelper.SetTraderUpdateTime(_traderConfig, traderBase, timeUtil.GetHoursAsSeconds(1), timeUtil.GetHoursAsSeconds(2));
 
         // Add our trader to the config list, this lets it be seen by the flea market
         _ragfairConfig.Traders.TryAdd(traderBase.Id, true);
 
-        // Get the database files
-        var dbTables = _databaseService.GetTables();
-
-        // Create an empty assort ready for our items
-        var emptyTraderItemAssortObject = new TraderAssort
-        {
-            Items = [],
-            BarterScheme = new Dictionary<string, List<List<BarterScheme>>>(),
-            LoyalLevelItems = new Dictionary<string, int>()
-        };
-
         // Add our trader (with no items yet) to the server database
-        addTraderHelper.AddTraderToDb(
-            traderBase,
-            dbTables,
-            _cloner,
-            emptyTraderItemAssortObject
-            );
+        // An 'assort' is the term used to describe the offers a trader sells, it has 3 parts to an assort
+        // 1: The item
+        // 2: The barter scheme, cost of the item (money or barter)
+        // 3: The Loyalty level, what rep level is required to buy the item from trader
+        addCustomTraderHelper.AddTraderWithEmptyAssortToDb(traderBase);
 
         // Add localisation text for our trader to the database so it shows to people playing in different languages
-        addTraderHelper.AddTraderToLocales(
-            traderBase,
-            _databaseService.GetTables(),
-            traderBase.Name,
-            "Cat",
-            traderBase.Nickname,
-            traderBase.Location,
-            "This is the cat shop. Meow.");
-
-        //Create a helper class to assist us with making items for our trader
-        // It's called 'fluent' as it's a technical term to describe how it can "chain" methods together
-        var fluentAssortCreator = new FluentTraderAssortCreator(_logger, _hashUtil);
+        addCustomTraderHelper.AddTraderToLocales(traderBase, "Cat", "This is the cat shop. Meow.");
 
         // Add a single "milk" for 2000 roubles that player can buy a max of 10 per refresh
         fluentAssortCreator
@@ -132,7 +83,7 @@ public class AddTraderWithDynamicAssorts : IOnLoad
             .AddBuyRestriction(10)
             .AddMoneyCost(Money.ROUBLES, 2000)
             .AddLoyaltyLevel(1)
-            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+            .Export(traderBase.Id);
 
         // Add a 3x bitcoin + salewa for milk barter
         fluentAssortCreator
@@ -141,36 +92,39 @@ public class AddTraderWithDynamicAssorts : IOnLoad
             .AddBarterCost(ItemTpl.BARTER_PHYSICAL_BITCOIN, 3)
             .AddBarterCost(ItemTpl.MEDKIT_SALEWA_FIRST_AID_KIT, 1)
             .AddLoyaltyLevel(1)
-            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+            .Export(traderBase.Id);
 
 
         // Add glock as a rouble purchase
         fluentAssortCreator
-            .CreateComplexAssortItem(addTraderHelper.CreateGlock())
+            .CreateComplexAssortItem(addCustomTraderHelper.CreateGlock())
             .AddUnlimitedStackCount()
             .AddMoneyCost(Money.ROUBLES, 20000)
             .AddBuyRestriction(3)
             .AddLoyaltyLevel(1)
-            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+            .Export(traderBase.Id);
 
         // Add mp133 preset as a barter for mayonnaise
-        var mp133BarterId = "584148f2245977598f1ad387"; // This preset id comes from globals.json
+        // We give it the id of the mp133 weapon preset found in globals.json
+        // Most weapons have a 'default' in `Globals.ItemPresets`
+        var mp133PresetId = "584148f2245977598f1ad387";
         fluentAssortCreator
-            .CreateComplexAssortItem(dbTables.Globals.ItemPresets.GetValueOrDefault(mp133BarterId).Items) 
+            .CreateComplexAssortItem(databaseService.GetTables().Globals.ItemPresets.GetValueOrDefault(mp133PresetId).Items)
             .AddStackCount(200)
             .AddBarterCost(ItemTpl.FOOD_JAR_OF_DEVILDOG_MAYO, 1)
             .AddBuyRestriction(3)
             .AddLoyaltyLevel(1)
-            .Export(dbTables.Traders.GetValueOrDefault(traderBase.Id));
+            .Export(traderBase.Id);
 
         // Happy little log message
-        _logger.Success("Added Cat trader to server");
+        logger.Success("Added Cat trader to server");
 
         // Send back a success to the server to say our trader is good to go
         return Task.CompletedTask;
     }
 }
 
+// These are unique IDs we've generated earlier to save time when adding the glock
 public static class NewItemIds
 {
     public static string GLOCK_BASE = "66eeef3b2a166b73d2066a74";

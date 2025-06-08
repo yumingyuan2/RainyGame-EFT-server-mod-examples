@@ -1,32 +1,31 @@
-﻿using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
-public class FluentTraderAssortCreator
+/// <summary>
+/// We inject this class into 'AddTraderWithDynamicAssorts' to help us add items to the trader to sell
+/// </summary>
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
+public class FluentTraderAssortCreator(
+    ISptLogger<AddTraderWithDynamicAssorts> logger,
+    DatabaseService databaseService,
+    HashUtil hashUtil)
 {
-    private readonly ISptLogger<AddTraderWithDynamicAssorts> _logger;
-    private readonly HashUtil _hashUtil;
-
     private readonly List<Item> _itemsToSell = [];
-    private Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
+    private readonly Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
     private readonly Dictionary<string, int> _loyaltyLevel = new();
-
-    public FluentTraderAssortCreator(
-        ISptLogger<AddTraderWithDynamicAssorts> logger,
-        HashUtil hashUtil)
-    {
-        _logger = logger;
-        _hashUtil = hashUtil;
-    }
 
     public FluentTraderAssortCreator CreateSingleAssortItem(string itemTpl, string? itemId = null)
     {
         // Create item ready for insertion into assort table
         var newItemToAdd = new Item
         {
-            Id = itemId ?? _hashUtil.Generate(),
+            Id = itemId ?? hashUtil.Generate(),
             Template = itemTpl,
             ParentId = "hideout", // Should always be "hideout"
             SlotId = "hideout", // Should always be "hideout"
@@ -104,7 +103,7 @@ public class FluentTraderAssortCreator
 
         if (!_barterScheme.TryAdd(_itemsToSell[0].Id, [[dataToAdd]]))
         {
-            _logger.Warning($"Unable to add barter scheme currency: {currencyType}");
+            logger.Warning($"Unable to add barter scheme currency: {currencyType}");
         }
 
         return this;
@@ -148,16 +147,18 @@ public class FluentTraderAssortCreator
         return this;
     }
 
-    /**
-     * Reset objet ready for reuse
-     * @returns
-     */
-    public FluentTraderAssortCreator? Export(Trader traderData)
+    /// <summary>
+    /// Store the generated assort in the server db against the desired trader
+    /// </summary>
+    /// <param name="traderId">Id of trader to add assort to</param>
+    public FluentTraderAssortCreator? Export(string traderId)
     {
+        var traderData = databaseService.GetTables().Traders.GetValueOrDefault(traderId);
+
         var rootItemAddedId = _itemsToSell.FirstOrDefault().Id;
         if (traderData.Assort.Items.Exists(x => x.Id == rootItemAddedId))
         {
-            _logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already in use");
+            logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already in use");
 
             _itemsToSell.Clear();
             _barterScheme.Clear();
