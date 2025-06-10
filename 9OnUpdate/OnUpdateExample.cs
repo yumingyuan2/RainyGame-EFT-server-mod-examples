@@ -31,26 +31,14 @@ public record ModMetadata : AbstractModMetadata
 
 // Check `OnUpdateOrder` for list of possible choices
 [Injectable(TypePriority = OnUpdateOrder.InsuranceCallbacks)] // Can also give it an int value for more fine-grained control
-public class OnUpdateExample : IOnUpdate // Must implement the IOnUpdate interface
+public class OnUpdateExample(
+    ISptLogger<OnUpdateExample> logger) : IOnUpdate // Must implement the IOnUpdate interface
 {
-    private readonly ISptLogger<OnUpdateExample> _logger;
-
-    public OnUpdateExample(
-        ISptLogger<OnUpdateExample> logger)
-    {
-        _logger = logger;
-    }
-
     public Task<bool> OnUpdate(long timeSinceLastRun)
     {
         // Can do work here
-        _logger.Success($"Mod running update after insurance callbacks have run!");
+        logger.Success($"Mod running update after insurance callbacks have run!");
 
         return Task.FromResult(true); // Return true for a success, false for failure
-    }
-
-    public string GetRoute()
-    {
-        return "mod-update-example";
     }
 }

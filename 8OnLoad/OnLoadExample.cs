@@ -31,26 +31,14 @@ public record ModMetadata : AbstractModMetadata
 
 // Check `OnLoadOrder` for list of possible choices
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader)] // Can also give an int value for fine-grained control
-public class OnLoadExample : IOnLoad // Must implement the IOnLoad interface
+public class OnLoadExample(
+    ISptLogger<OnLoadExample> logger) : IOnLoad // Must implement the IOnLoad interface
 {
-    private readonly ISptLogger<OnLoadExample> _logger;
-
-    public OnLoadExample(
-        ISptLogger<OnLoadExample> logger)
-    {
-        _logger = logger;
-    }
-
     public Task OnLoad()
     {
         // Can do work here
-        _logger.Success($"Mod loaded after database!");
+        logger.Success($"Mod loaded after database!");
 
         return Task.CompletedTask;
-    }
-
-    public string GetRoute()
-    {
-        return "mod-load-example";
     }
 }

@@ -33,20 +33,12 @@ public record ModMetadata : AbstractModMetadata
 
 // We want to load after PostDBModLoader is complete, so we set our type priority to that, plus 1.
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
-public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so that this mod can do something
+public class EditDatabaseValues(
+    ISptLogger<EditDatabaseValues> logger, // We are injecting a logger similar to example 1, but notice the class inside <> is different
+    DatabaseService databaseService)
+    : IOnLoad // Implement the `IOnLoad` interface so that this mod can do something
 {
-    private readonly DatabaseService _databaseService;
-    private readonly ISptLogger<EditDatabaseValues> _logger;
-
     // Our constructor
-    public EditDatabaseValues(
-        DatabaseService databaseService,
-        ISptLogger<EditDatabaseValues> logger
-    )
-    {
-        _databaseService = databaseService;
-        _logger = logger;
-    }
 
     /// <summary>
     /// This is called when this class is loaded, the order in which its loaded is set according to the type priority
@@ -59,9 +51,11 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
         // We can use the '_databaseService' we injected to access this data, this includes files from EFT and SPT
 
         // Lets edit some globals settings to make the game easier
+        // This is a method, a chunk of code we run, ctrl+click the method to go to the code, or click it and press f12
+        // Methods are not necessary, but they help to compartmentalise code and made it easier to read/navigate
         EditGlobals();
 
-        // Lets edit the BTR to have the christmas tarcola skin
+        // Lets edit the BTR to have the christmas-themed `Tarcola` skin
         EditBtr();
 
         // Let's edit the hideout so it's easier to upgrade the lavatory
@@ -73,16 +67,17 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
         // Lets edit Customs
         EditCustoms();
 
-        _logger.Success("Finished Editing Database");
+        // lets write a nice log message to the server console so players know our mod has made changes
+        logger.Success("Finished Editing Database!");
         
-        // Return a completed task
+        // Inform server we have finished
         return Task.CompletedTask;
     }
     
     private void EditGlobals()
     {
         // Let's edit settings in the GLOBALS file (database/globals.json)
-        var globals = _databaseService.GetGlobals();
+        var globals = databaseService.GetGlobals();
 
         // Let's edit the scav cooldown to be 1 second
         globals.Configuration.SavagePlayCooldown = 1;
@@ -107,7 +102,7 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
     private void EditBtr()
     {
         // BTR setting can be found in the GLOBALS file too
-        var globals = _databaseService.GetGlobals();
+        var globals = databaseService.GetGlobals();
 
         // We get the BTR settings from globals first
         var btrSettings = globals.Configuration.BTRSettings;
@@ -122,7 +117,7 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
     private void EditHideout()
     {
         // Hideout data can be found in (SPT_Data\Server\database\hideout)
-        var hideout = _databaseService.GetHideout();
+        var hideout = databaseService.GetHideout();
 
         // We want the areas, they're stored in a list
         var hideoutAreas = hideout.Areas;
@@ -152,7 +147,7 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
 
     private void EditScavSettings()
     {
-        var bots = _databaseService.GetBots();
+        var bots = databaseService.GetBots();
 
         // Same as the above example, we use 'TryGetValue' to get the 'assault' bot (assault is the internal name for scavs)
         bots.Types.TryGetValue("assault", out var assaultBot);
@@ -183,7 +178,7 @@ public class EditDatabaseValues : IOnLoad // Implement the IOnLoad interface so 
     private void EditCustoms()
     {
         // Let's get all the maps (called locations)
-        var locations = _databaseService.GetLocations();
+        var locations = databaseService.GetLocations();
 
         // Customs is called 'bigmap' in eft
         var customs = locations.Bigmap;

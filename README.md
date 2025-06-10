@@ -4,7 +4,7 @@
 A collection of example mods that perform various actions in SPT
 
 # Setup
-The solution has numbered folders, starting at 1 and work upwards to find examples with increasing complexity.
+The solution has numbered folders, starting at 1 and work downwards to find examples with increasing complexity.
 
 Each mod imports multiple NUGET packages. These are used as libraries of the server code.
 

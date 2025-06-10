@@ -34,27 +34,19 @@ public record ModMetadata : AbstractModMetadata
 
 // We want to load after PreSptModLoader is complete, so we set our type priority to that, plus 1.
 [Injectable(TypePriority = OnLoadOrder.PreSptModLoader + 1)]
-public class ReadJson5Config : IOnLoad // Implement the IOnLoad interface so that this mod can do something
+public class ReadJson5Config(
+    ISptLogger<ReadJson5Config> logger,
+    ModHelper modHelper) // `ModHelper` is a class from the server that can assist with annoying tasks mod makers encounter
+    : IOnLoad // Implement the IOnLoad interface so that this mod can do something
 {
-    private readonly ISptLogger<ReadJson5Config> _logger;
-    private readonly ModHelper _modHelper;
-
-    public ReadJson5Config(
-        ISptLogger<ReadJson5Config> logger,
-        ModHelper modHelper)
-    {
-        _logger = logger;
-        _modHelper = modHelper;
-    }
-    
     public Task OnLoad()
     {
-        var pathToMod = _modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
+        var pathToMod = modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
 
         // To use JSON5, you will have to find and provide your own JSON5 library to decode it
-        var json5Config = JSON5.ToObject<ModConfig>(_modHelper.GetRawFileData(pathToMod, "config.json5"));
+        var json5Config = JSON5.ToObject<ModConfig>(modHelper.GetRawFileData(pathToMod, "config.json5"));
 
-        _logger.Success($"Read property: 'ExampleProperty' from config with value: {json5Config.ExampleProperty}");
+        logger.Success($"Read property: 'ExampleProperty' from config with value: {json5Config.ExampleProperty}");
         
         // Return a completed task
         return Task.CompletedTask;

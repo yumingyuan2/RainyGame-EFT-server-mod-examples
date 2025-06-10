@@ -64,7 +64,7 @@ public class CustomStaticRouter : StaticRouter
 
     private static ValueTask<string> HandleRoute(string url, ExampleStaticRequestData info, string sessionId)
     {
-        // Stuff goes here
+        // Your mods code goes here
 
         return new ValueTask<string>(_httpResponseUtil.NullResponse());
     }

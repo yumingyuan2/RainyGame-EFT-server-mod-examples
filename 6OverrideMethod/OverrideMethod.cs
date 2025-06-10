@@ -1,9 +1,10 @@
-﻿using SPTarkov.Server.Core.Models.Utils;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Spt.Mod;
+using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils;
-using SPTarkov.DI.Annotations;
-using SPTarkov.Server.Core.Models.Spt.Mod;
 
 namespace _6OverrideMethod;
 
@@ -31,17 +32,15 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-[Injectable]
-public class OverrideMethod : Watermark
+[Injectable(TypePriority = OnLoadOrder.Watermark)] // The same load order value needs to be used as the overridden methods containing type
+public class OverrideMethod(
+    ISptLogger<Watermark> logger, // The logger needs to use the same type as the overridden type (in this case, Watermark)
+    ConfigServer configServer,
+    LocalisationService localisationService,
+    WatermarkLocale watermarkLocale)
+    : Watermark(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
 {
-    public OverrideMethod(
-        ISptLogger<Watermark> logger, // The logger needs to use the same type as the overriden type (in this case, Watermark)
-        ConfigServer configServer,
-        LocalisationService localisationService,
-        WatermarkLocale watermarkLocale)
-        : base(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
-    { }
-    
+
     public override async Task OnLoad()
     {
         // We add a log message to the init method

@@ -21,45 +21,35 @@ public record ModMetadata : AbstractModMetadata
     public override List<string>? Contributors { get; set; }
     public override string Version { get; set; } = "1.0.0";
     public override string SptVersion { get; set; } = "4.0.0";
-    public override List<string>? LoadBefore { get; set; }
+    public override List<string>? LoadBefore { get; set; } = ["EditDatabaseExample"];
     public override List<string>? LoadAfter { get; set; }
     public override List<string>? Incompatibilities { get; set; }
     public override Dictionary<string, string>? ModDependencies { get; set; }
-    public override string? Url { get; set; }
-    public override bool? IsBundleMod { get; set; }
+    public override string? Url { get; set; } = "https://github.com/sp-tarkov/server-mod-examples";
+    public override bool? IsBundleMod { get; set; } = false;
     public override string? Licence { get; set; } = "MIT";
 }
 
 // We want to load after PreSptModLoader is complete, so we set our type priority to that, plus 1.
 [Injectable(TypePriority = OnLoadOrder.PreSptModLoader + 1)]
-public class Logging : IOnLoad // Implement the IOnLoad interface so that this mod can do something
+public class Logging(
+    ISptLogger<Logging> logger) // We inject a logger for use inside our class, it must have the class inside the diamond <> brackets
+    : IOnLoad // Implement the IOnLoad interface so that this mod can do something on server load
 {
-    // Our logger we create in the constructor below
-    private readonly ISptLogger<Logging> _logger;
-
-    // Constructor - Inject a 'ISptLogger' with your mods Class inside the diamond brackets
-    public Logging(
-        ISptLogger<Logging> logger
-    )
-    {
-        // Save the logger we're injecting into a private variable that is scoped to this class (only this class has access to it)
-        _logger = logger;
-    }
-
     public Task OnLoad()
     {
-        // We can access the logger to assigned in the constructor here
-        _logger.Success("This is a success message");
-        _logger.Warning("This is a warning message");
-        _logger.Error("This is an error message");
-        _logger.Info("This is an info message");
-        _logger.Critical("this is a critical message");
+        // We can access the logger and call its methods to log to the server window and the server log file
+        logger.Success("This is a success message");
+        logger.Warning("This is a warning message");
+        logger.Error("This is an error message");
+        logger.Info("This is an info message");
+        logger.Critical("This is a critical message");
 
         // Logging with colors requires you to 'pass' the text color and background color
-        _logger.LogWithColor("This is a message with custom colors", LogTextColor.Red, LogBackgroundColor.Black);
-        _logger.Debug("This is a debug message that gets written to the log file, not the console");
+        logger.LogWithColor("This is a message with custom colors", LogTextColor.Red, LogBackgroundColor.Black);
+        logger.Debug("This is a debug message that gets written to the log file, not the console");
         
-        // Return a completed task so that we know we are done
+        // Inform the server our mod has finished doing work
         return Task.CompletedTask;
     }
 }

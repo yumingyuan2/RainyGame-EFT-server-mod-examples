@@ -22,25 +22,25 @@ public record ModMetadata : AbstractModMetadata
 }
 
 /// <summary>
-/// Having multiple classes can make keeping your code maintainable easier, you can split related code into their own class
+/// Having multiple classes can make keeping your code maintainable easier, you can split related code into their own class and inject them
 /// </summary>
 
 // We want to load after PostDBModLoader is complete, so we set our type priority to that, plus 1.
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
-public class UseMultipleClasses(ISptLogger<UseMultipleClasses> logger) : IOnLoad
+public class UseMultipleClasses(
+    ISptLogger<UseMultipleClasses> logger,
+    SecondClass secondClass // We inject our second class just like other classes
+    ) : IOnLoad
 {
     public Task OnLoad()
     {
-        // We create an instance of the other class
-        var otherClass = new SecondClass();
-
         // We call the "GetText" method that exists in the other class
-        var text = otherClass.GetText();
+        var text = secondClass.GetText();
 
         // Log the result to the server console
         logger.Info($"The SecondClass returned the text: {text}");
         
-        // Return a completed task
+        // Tell server we've finished
         return Task.CompletedTask;
     }
 }
