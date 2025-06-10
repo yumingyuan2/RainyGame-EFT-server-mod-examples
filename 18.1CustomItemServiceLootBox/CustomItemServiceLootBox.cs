@@ -25,38 +25,24 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
+// Inject just after the database has loaded
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
-public class CustomItemServiceLootBox : IOnLoad
+public class CustomItemServiceLootBox(
+    ISptLogger<CustomItemServiceLootBox> logger,
+    DatabaseServer databaseServer,
+    ConfigServer configServer,
+    CustomItemService customItemService
+) : IOnLoad
 {
-    private CustomItemService _customItemService;
-    private DatabaseServer _databaseServer;
-    private ConfigServer _configServer;
-    private readonly ISptLogger<CustomItemServiceLootBox> _logger;
     private Dictionary<string, TemplateItem> _itemDb;
+    private readonly InventoryConfig _inventoryConfig = configServer.GetConfig<InventoryConfig>();
 
-    private InventoryConfig _inventoryConfig;
-
-    public CustomItemServiceLootBox(
-        DatabaseServer databaseServer,
-        ConfigServer configServer,
-        ISptLogger<CustomItemServiceLootBox> logger,
-        CustomItemService customItemService
-    )
-    {
-        _databaseServer = databaseServer;
-        _configServer = configServer;
-        _logger = logger;
-        _customItemService = customItemService;
-
-        _inventoryConfig = _configServer.GetConfig<InventoryConfig>();
-    }
-    
     public Task OnLoad()
     {
-        _itemDb = _databaseServer.GetTables().Templates.Items;
+        _itemDb = databaseServer.GetTables().Templates.Items;
 
-        // Example of adding new item by cloning existing item using createclonedetails
-        var crateId = "new_crate_with_randomized_content";
+        // Example of adding new item by cloning existing item using createCloneDetails
+        const string crateId = "new_crate_with_randomized_content";
         var exampleCloneItem = new NewItemFromCloneDetails
         {
             // The item we want to clone, in this example i will cloning the sealed weapon crate
@@ -90,7 +76,7 @@ public class CustomItemServiceLootBox : IOnLoad
         };
 
         // Basically calls the function and tell the server to add our Cloned new item into the server
-        _customItemService.CreateItemFromClone(exampleCloneItem);
+        customItemService.CreateItemFromClone(exampleCloneItem);
 
         // Change item _name to remove it from the *actual* sealed weapon crate logic, this removes it from airdrops and allows easier access to change the contents
 

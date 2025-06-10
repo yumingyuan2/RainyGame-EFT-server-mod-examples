@@ -25,20 +25,10 @@ public record ModMetadata : AbstractModMetadata
 }
 
 [Injectable]
-public class CustomCommandoCommand : IChatCommand
+public class CustomCommandoCommand(
+    DatabaseServer databaseServer,
+    MailSendService mailSendService) : IChatCommand
 {
-    private DatabaseServer _databaseServer;
-    private MailSendService _mailSendService;
-
-    public CustomCommandoCommand(
-        DatabaseServer databaseServer,
-        MailSendService mailSendService
-    )
-    {
-        _databaseServer = databaseServer;
-        _mailSendService = mailSendService;
-    }
-
     public string GetCommandPrefix()
     {
         return "test";
@@ -59,12 +49,11 @@ public class CustomCommandoCommand : IChatCommand
         return ["talk"];
     }
 
-    // spelling of sessionId is fixed in server
     public string Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         if (command == "talk")
         {
-            _mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"IM TALKING! OKAY?!\nHere's the walk speed X config from the DB: {_databaseServer.GetTables().Globals.Configuration.WalkSpeed.X}");
+            mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"IM TALKING! OKAY?!\nHere's the walk speed X config from the DB: {databaseServer.GetTables().Globals.Configuration.WalkSpeed.X}");
             return request.DialogId;
         }
 

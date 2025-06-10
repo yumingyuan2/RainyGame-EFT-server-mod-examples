@@ -1,7 +1,6 @@
 ﻿using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
-using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services.Mod;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
@@ -25,23 +24,11 @@ public record ModMetadata : AbstractModMetadata
 }
 
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
-public class CustomItemServiceExample : IOnLoad
+public class CustomItemServiceExample(
+    ISptLogger<CustomItemServiceExample> logger,
+    CustomItemService customItemService) : IOnLoad
 {
-    private readonly CustomItemService _customItemService;
-    private readonly ISptLogger<CustomItemServiceExample> _logger;
-    private readonly DatabaseServer _databaseServer;
 
-    public CustomItemServiceExample(
-        CustomItemService customItemService,
-        ISptLogger<CustomItemServiceExample> logger,
-        DatabaseServer databaseServer
-    )
-    {
-        _customItemService = customItemService;
-        _logger = logger;
-        _databaseServer = databaseServer;
-    }
-    
     public Task OnLoad()
     {
         //Example of adding new item by cloning an existing item using `createCloneDetails`
@@ -115,7 +102,7 @@ public class CustomItemServiceExample : IOnLoad
             },
         };
 
-        _customItemService.CreateItemFromClone(exampleCloneItem); // Send our data to the function that creates our item
+        customItemService.CreateItemFromClone(exampleCloneItem); // Send our data to the function that creates our item
         
         return Task.CompletedTask;
     }

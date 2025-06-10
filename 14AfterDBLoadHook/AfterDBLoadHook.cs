@@ -40,31 +40,20 @@ public record ModMetadata : AbstractModMetadata
 /// }
 /// </code>
 [Injectable]
-public class AfterDBLoadHook : IPostDBLoadModAsync, IPostSptLoadModAsync
+public class AfterDBLoadHook(
+    DatabaseServer databaseServer,
+    ISptLogger<AfterDBLoadHook> logger)
+    : IPostDBLoadModAsync, IPostSptLoadModAsync
 {
-    private readonly ConfigServer _configServer;
-    private readonly DatabaseServer _databaseServer;
-    private readonly ISptLogger<AfterDBLoadHook> _logger;
     private Dictionary<string, TemplateItem>? _itemsDb;
-
-    public AfterDBLoadHook(
-        ConfigServer configServer,
-        DatabaseServer databaseServer,
-        ISptLogger<AfterDBLoadHook> logger
-    )
-    {
-        _configServer = configServer;
-        _databaseServer = databaseServer;
-        _logger = logger;
-    }
 
     public Task PostDBLoadAsync()
     {
-        _itemsDb = _databaseServer.GetTables().Templates.Items;
+        _itemsDb = databaseServer.GetTables().Templates.Items;
 
         // Database will be loaded, this is the fresh state of the DB so NOTHING from the SPT
         // logic has modified anything yet. This is the DB loaded straight from the JSON files
-        _logger.LogWithColor($"Database item size: {_itemsDb.Count}", LogTextColor.Red, LogBackgroundColor.Yellow);
+        logger.LogWithColor($"Database item size: {_itemsDb.Count}", LogTextColor.Red, LogBackgroundColor.Yellow);
 
         // lets do a quick modification and see how this reflect later on, on the postSptLoad()
         // find the nvgs item by its Id
@@ -73,7 +62,7 @@ public class AfterDBLoadHook : IPostDBLoadModAsync, IPostSptLoadModAsync
         if (_itemsDb.TryGetValue("5c0558060db834001b735271", out var nvgs))
         {
             // Lets log the state before the modification
-            _logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
+            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
             // Update one of its properties to be true
             nvgs.Properties.CanSellOnRagfair = true;
         }
@@ -89,7 +78,7 @@ public class AfterDBLoadHook : IPostDBLoadModAsync, IPostSptLoadModAsync
         if (_itemsDb.TryGetValue("5c0558060db834001b735271", out var nvgs))
         {
             // Lets log the state after the modification
-            _logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
+            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
         }
         
         return Task.CompletedTask;

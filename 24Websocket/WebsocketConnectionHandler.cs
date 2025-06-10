@@ -24,16 +24,9 @@ public record ModMetadata : AbstractModMetadata
 }
 
 [Injectable(InjectionType = InjectionType.Singleton)]
-public class CustomWebSocketConnectionHandler : IWebSocketConnectionHandler
+public class CustomWebSocketConnectionHandler(
+    ISptLogger<CustomWebSocketConnectionHandler> logger) : IWebSocketConnectionHandler
 {
-    private readonly ISptLogger<CustomWebSocketConnectionHandler> _logger;
-    public CustomWebSocketConnectionHandler(
-        ISptLogger<CustomWebSocketConnectionHandler> logger
-    )
-    {
-        _logger = logger;
-    }
-
     public string GetHookUrl()
     {
         return "/custom/socket/";
@@ -46,7 +39,7 @@ public class CustomWebSocketConnectionHandler : IWebSocketConnectionHandler
 
     public Task OnConnection(WebSocket ws, HttpContext context, string sessionIdContext)
     {
-        _logger.Info("Custom web socket is now connected!");
+        logger.Info("Custom web socket is now connected!");
         
         return Task.CompletedTask;
     }

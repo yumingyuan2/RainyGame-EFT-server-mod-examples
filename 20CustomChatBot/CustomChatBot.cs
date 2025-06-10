@@ -25,17 +25,9 @@ public record ModMetadata : AbstractModMetadata
 }
 
 [Injectable]
-public class CustomChatBot : IDialogueChatBot
+public class CustomChatBot(
+    MailSendService mailSendService) : IDialogueChatBot
 {
-    private MailSendService _mailSendService;
-
-    public CustomChatBot(
-        MailSendService mailSendService
-    )
-    {
-        _mailSendService = mailSendService;
-    }
-
     public UserDialogInfo GetChatBot()
     {
         return new UserDialogInfo
@@ -55,7 +47,7 @@ public class CustomChatBot : IDialogueChatBot
 
     public string? HandleMessage(string sessionId, SendMessageRequest request)
     {
-        _mailSendService.SendUserMessageToPlayer(
+        mailSendService.SendUserMessageToPlayer(
             sessionId,
             GetChatBot(),
             $"Im Buddy! I just reply back what you typed to me!\n{request.Text}");

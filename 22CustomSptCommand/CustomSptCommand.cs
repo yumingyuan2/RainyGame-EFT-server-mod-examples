@@ -25,20 +25,10 @@ public record ModMetadata : AbstractModMetadata
 }
 
 [Injectable]
-public class CustomSptCommand : ISptCommand
+public class CustomSptCommand(
+    MailSendService mailSendService,
+    ItemHelper itemHelper) : ISptCommand
 {
-    private readonly MailSendService _mailSendService;
-    private readonly ItemHelper _itemHelper;
-
-    public CustomSptCommand(
-        MailSendService mailSendService,
-        ItemHelper itemHelper
-    )
-    {
-        _mailSendService = mailSendService;
-        _itemHelper = itemHelper;
-    }
-
     public string GetCommand()
     {
         return "getName";
@@ -52,7 +42,8 @@ public class CustomSptCommand : ISptCommand
     public string PerformAction(UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         var splitCommand  = request.Text.Split(" ");
-        _mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"That templateId belongs to item {_itemHelper.GetItem(splitCommand[2]).Value?.Properties?.Name ?? ""}");
+        mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"That templateId belongs to item {itemHelper.GetItem(splitCommand[2]).Value?.Properties?.Name ?? ""}");
+        
         return request.DialogId;
     }
 }
