@@ -23,7 +23,3 @@ Prioritize understanding Dependency Injection and Inversion of Control, the arch
  
 ## Distribution
 TODO
-
-# Mod Migration Guide
-TODO
-
