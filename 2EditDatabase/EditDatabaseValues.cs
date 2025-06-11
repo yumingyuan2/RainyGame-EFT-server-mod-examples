@@ -48,7 +48,7 @@ public class EditDatabaseValues(
     public Task OnLoad()
     {
         // When SPT starts, it stores all the data found in (SPT_Data\Server\database) in memory
-        // We can use the '_databaseService' we injected to access this data, this includes files from EFT and SPT
+        // We can use the 'databaseService' we injected to access this data, this includes files from EFT and SPT
 
         // Lets edit some globals settings to make the game easier
         // This is a method, a chunk of code we run, ctrl+click the method to go to the code, or click it and press f12
