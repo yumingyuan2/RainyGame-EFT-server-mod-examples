@@ -20,6 +20,9 @@ Prioritize understanding Dependency Injection and Inversion of Control, the arch
 
 ### Build
 `Visual Studio > Build > Rebuild Solution`
+`Rider > TODO`
  
 ## Distribution
-TODO
+- Build the project in 'Release' mode
+- Copy the folder inside: `mod\bin\Release` into your servers `/mods` folder
+- Start server
