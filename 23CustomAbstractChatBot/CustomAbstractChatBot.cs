@@ -28,11 +28,12 @@ public record ModMetadata : AbstractModMetadata
 public class CustomAbstractChatBot : AbstractDialogChatBot
 {
     public CustomAbstractChatBot(
-        ISptLogger<AbstractDialogChatBot> _logger,
-        MailSendService _mailSendService,
-        IEnumerable<IChatCommand> _chatCommands,
-        IEnumerable<IChatMessageHandler> _chatMessageHandlers
-    ) : base(_logger, _mailSendService, _chatCommands)
+        ISptLogger<AbstractDialogChatBot> logger,
+        MailSendService mailSendService,
+        LocalisationService localisationService,
+        IEnumerable<IChatCommand> chatCommands,
+        IEnumerable<IChatMessageHandler> chatMessageHandlers
+    ) : base(logger, mailSendService, localisationService, chatCommands)
     {
     }
 
@@ -40,7 +41,7 @@ public class CustomAbstractChatBot : AbstractDialogChatBot
     {
         return new UserDialogInfo
         {
-            Id = "674db14ed849a3727ef24da0", // REQUIRES a valid monogo_id, use online generator to create one
+            Id = "674db14ed849a3727ef24da0", // REQUIRES a valid mongoid, use online generator to create one
             Aid = 1234566,
             Info = new UserDialogDetails
             {
