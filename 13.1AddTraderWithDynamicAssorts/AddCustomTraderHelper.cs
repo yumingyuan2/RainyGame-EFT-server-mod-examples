@@ -88,11 +88,17 @@ namespace _13._1AddTraderWithDynamicAssorts
 
             foreach (var (localeKey, localeKvP) in locales)
             {
-                localeService.AddCustomClientLocale(localeKey, $"{newTraderId} FullName", fullName);
-                localeService.AddCustomClientLocale(localeKey, $"{newTraderId} FirstName", firstName);
-                localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Nickname", nickName);
-                localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Location", location);
-                localeService.AddCustomClientLocale(localeKey, $"{newTraderId} Description", description);
+                // We have to add a transformer here, because locales are lazy loaded due to them taking up huge space in memory
+                // The transformer will make sure that each time the locales are requested, the ones added below are included
+                localeKvP.AddTransformer(lazyloadedLocaleData =>
+                {
+                    lazyloadedLocaleData.Add($"{newTraderId} FullName", fullName);
+                    lazyloadedLocaleData.Add($"{newTraderId} FirstName", firstName);
+                    lazyloadedLocaleData.Add($"{newTraderId} Nickname", nickName);
+                    lazyloadedLocaleData.Add($"{newTraderId} Location", location);
+                    lazyloadedLocaleData.Add($"{newTraderId} Description", description);
+                    return lazyloadedLocaleData;
+                });
             }
         }
 

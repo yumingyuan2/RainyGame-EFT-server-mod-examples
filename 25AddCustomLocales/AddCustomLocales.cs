@@ -25,12 +25,10 @@ public record ModMetadata : AbstractModMetadata
 [Injectable(TypePriority = OnLoadOrder.PostSptModLoader + 1)]
 public class AddCustomLocales(
     ISptLogger<AddCustomLocales> logger,
+    DatabaseService databaseService,
     LocaleService localeService)
     : IOnLoad
 {
-    // Our logger we create in the constructor below
-    private static Dictionary<string, string> _locales;
-
     // Constructor - Inject a 'ISptLogger' with your mods Class inside the diamond brackets
     // Save the logger we're injecting into a private variable that is scoped to this class (only this class has access to it)
     // save the locale service into a private variable that is scoped to this class (only this class has access to it)
@@ -38,16 +36,25 @@ public class AddCustomLocales(
     public Task OnLoad()
     {
         // Add a custom locale to the en game locales
-        localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change of beta version warning");
-        localeService.AddCustomClientLocale("en", "TestingLocales", "Testing Locales");
+       if (databaseService.GetLocales().Global.TryGetValue("en", out var lazyloadedValue))
+        {
+            // We have to add a transformer here, because locales are lazy loaded due to them taking up huge space in memory
+            // The transformer will make sure that each time the locales are requested, the ones changed or added below are included
+            lazyloadedValue.AddTransformer(lazyloadedLocaleData =>
+            {
+                lazyloadedLocaleData["Attention! This is a Beta version of Escape from Tarkov for testing purposes."] = "Testing change of beta version warning";
+                lazyloadedLocaleData.Add("TestingLocales", "Testing Locales");
 
-        logger.Success("Added a custom locale to the database");
-        _locales = localeService.GetLocaleDb("en");
+                return lazyloadedLocaleData;
+            });
+
+            logger.Success("Added a custom locale to the database");
+        }
+
+        var _locales = localeService.GetLocaleDb("en");
         // Log this so we can see it in the console
         logger.Info(_locales["TestingLocales"]);
         logger.Info(_locales["Attention! This is a Beta version of Escape from Tarkov for testing purposes."]);
-        localeService.AddCustomClientLocale("en", "Attention! This is a Beta version of Escape from Tarkov for testing purposes.", "Testing change again of beta version warning");
-        
         return Task.CompletedTask;
     }
 }
