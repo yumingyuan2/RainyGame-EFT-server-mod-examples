@@ -36,7 +36,7 @@ public record ModMetadata : AbstractModMetadata
 public class OverrideMethod(
     ISptLogger<Watermark> logger, // The logger needs to use the same type as the overridden type (in this case, Watermark)
     ConfigServer configServer,
-    LocalisationService localisationService,
+    ServerLocalisationService localisationService,
     WatermarkLocale watermarkLocale)
     : Watermark(logger, configServer, localisationService, watermarkLocale) // You must provide the parameters the overridden type requires
 {

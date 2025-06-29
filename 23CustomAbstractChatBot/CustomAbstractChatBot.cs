@@ -30,7 +30,7 @@ public class CustomAbstractChatBot : AbstractDialogChatBot
     public CustomAbstractChatBot(
         ISptLogger<AbstractDialogChatBot> logger,
         MailSendService mailSendService,
-        LocalisationService localisationService,
+        ServerLocalisationService localisationService,
         IEnumerable<IChatCommand> chatCommands,
         IEnumerable<IChatMessageHandler> chatMessageHandlers
     ) : base(logger, mailSendService, localisationService, chatCommands)
