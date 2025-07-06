@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Models.Spt.Mod;
@@ -34,7 +35,7 @@ public class CustomItemServiceLootBox(
     CustomItemService customItemService
 ) : IOnLoad
 {
-    private Dictionary<string, TemplateItem> _itemDb;
+    private Dictionary<MongoId, TemplateItem>? _itemDb;
     private readonly InventoryConfig _inventoryConfig = configServer.GetConfig<InventoryConfig>();
 
     public Task OnLoad()
@@ -88,19 +89,19 @@ public class CustomItemServiceLootBox(
         {
             RewardCount = 6,
             FoundInRaid = true,
-            RewardTplPool = new Dictionary<string, double>
+            RewardTplPool = new Dictionary<MongoId, double>
             {
-                {"57514643245977207f2c2d09", 1},
-                {"544fb62a4bdc2dfb738b4568", 1},
-                {"57513f07245977207e26a311", 1},
-                {"57513f9324597720a7128161", 1},
-                {"57513fcc24597720a31c09a6", 1},
-                {"5e8f3423fd7471236e6e3b64", 1},
-                {"60b0f93284c20f0feb453da7", 1},
-                {"5734773724597737fd047c14", 1},
-                {"59e3577886f774176a362503", 1},
-                {"57505f6224597709a92585a9", 1},
-                {"544fb6cc4bdc2d34748b456e", 1}
+                {new MongoId("57514643245977207f2c2d09"), 1},
+                {new MongoId("544fb62a4bdc2dfb738b4568"), 1},
+                {new MongoId("57513f07245977207e26a311"), 1},
+                {new MongoId("57513f9324597720a7128161"), 1},
+                {new MongoId("57513fcc24597720a31c09a6"), 1},
+                {new MongoId("5e8f3423fd7471236e6e3b64"), 1},
+                {new MongoId("60b0f93284c20f0feb453da7"), 1},
+                {new MongoId("5734773724597737fd047c14"), 1},
+                {new MongoId("59e3577886f774176a362503"), 1},
+                {new MongoId("57505f6224597709a92585a9"), 1},
+                {new MongoId("544fb6cc4bdc2d34748b456e"), 1}
             }
         };
         

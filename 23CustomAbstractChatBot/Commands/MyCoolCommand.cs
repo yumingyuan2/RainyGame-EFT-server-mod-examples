@@ -36,14 +36,14 @@ public class MyCoolCommand : IChatCommand
         return ["test"];
     }
 
-    public string Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         if (command == "test")
         {
             _mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"This is a test message shown as an example!");
-            return request.DialogId;
+            return ValueTask.FromResult(request.DialogId);
         }
 
-        return null;
+        return new ValueTask<string>(string.Empty);
     }
 }

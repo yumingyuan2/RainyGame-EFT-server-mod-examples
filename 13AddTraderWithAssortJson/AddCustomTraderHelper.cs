@@ -49,8 +49,8 @@ namespace _13AddTraderWithAssortJson
             var emptyTraderItemAssortObject = new TraderAssort
             {
                 Items = [],
-                BarterScheme = new Dictionary<string, List<List<BarterScheme>>>(),
-                LoyalLevelItems = new Dictionary<string, int>()
+                BarterScheme = new Dictionary<MongoId, List<List<BarterScheme>>>(),
+                LoyalLevelItems = new Dictionary<MongoId, int>()
             };
 
             // Create trader data ready to add to database

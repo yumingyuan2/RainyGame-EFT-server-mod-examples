@@ -45,13 +45,13 @@ public class CustomChatBot(
         };
     }
 
-    public string? HandleMessage(string sessionId, SendMessageRequest request)
+    public ValueTask<string> HandleMessage(string sessionId, SendMessageRequest request)
     {
         mailSendService.SendUserMessageToPlayer(
             sessionId,
             GetChatBot(),
             $"Im Buddy! I just reply back what you typed to me!\n{request.Text}");
 
-        return request.DialogId;
+        return ValueTask.FromResult(request.DialogId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Logging;
@@ -45,7 +46,7 @@ public class AfterDBLoadHook(
     ISptLogger<AfterDBLoadHook> logger)
     : IPostDBLoadModAsync, IPostSptLoadModAsync
 {
-    private Dictionary<string, TemplateItem>? _itemsDb;
+    private Dictionary<MongoId, TemplateItem>? _itemsDb;
 
     public Task PostDBLoadAsync()
     {

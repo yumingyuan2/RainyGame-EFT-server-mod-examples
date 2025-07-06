@@ -1,10 +1,10 @@
-﻿using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.Helpers.Dialog.Commando;
 using SPTarkov.Server.Core.Models.Eft.Dialog;
 using SPTarkov.Server.Core.Models.Eft.Profile;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
-using SPTarkov.DI.Annotations;
-using SPTarkov.Server.Core.Models.Spt.Mod;
 
 namespace _21CustomCommandoCommand;
 
@@ -49,14 +49,14 @@ public class CustomCommandoCommand(
         return ["talk"];
     }
 
-    public string Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
     {
         if (command == "talk")
         {
             mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"IM TALKING! OKAY?!\nHere's the walk speed X config from the DB: {databaseServer.GetTables().Globals.Configuration.WalkSpeed.X}");
-            return request.DialogId;
+            return new ValueTask<string>(request.DialogId);
         }
 
-        return null;
+        return new ValueTask<string>(string.Empty);
     }
 }

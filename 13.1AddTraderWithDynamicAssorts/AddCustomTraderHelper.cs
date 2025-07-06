@@ -14,10 +14,8 @@ namespace _13._1AddTraderWithDynamicAssorts
     [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
     public class AddCustomTraderHelper(
         ICloner cloner,
-        DatabaseService databaseService,
-        LocaleService localeService)
+        DatabaseService databaseService)
     {
-
         /// <summary>
         /// Add the traders update time for when their offers refresh
         /// </summary>
@@ -47,8 +45,8 @@ namespace _13._1AddTraderWithDynamicAssorts
             var emptyTraderItemAssortObject = new TraderAssort
             {
                 Items = [],
-                BarterScheme = new Dictionary<string, List<List<BarterScheme>>>(),
-                LoyalLevelItems = new Dictionary<string, int>()
+                BarterScheme = new Dictionary<MongoId, List<List<BarterScheme>>>(),
+                LoyalLevelItems = new Dictionary<MongoId, int>()
             };
 
             // Create trader data ready to add to database

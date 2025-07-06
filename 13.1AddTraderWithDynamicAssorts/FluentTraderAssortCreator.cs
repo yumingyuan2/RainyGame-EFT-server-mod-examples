@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services;
@@ -20,12 +21,12 @@ public class FluentTraderAssortCreator(
     private readonly Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
     private readonly Dictionary<string, int> _loyaltyLevel = new();
 
-    public FluentTraderAssortCreator CreateSingleAssortItem(string itemTpl, string? itemId = null)
+    public FluentTraderAssortCreator CreateSingleAssortItem(string itemTpl, MongoId? itemId = null)
     {
         // Create item ready for insertion into assort table
         var newItemToAdd = new Item
         {
-            Id = itemId ?? hashUtil.Generate(),
+            Id = itemId ?? new MongoId(),
             Template = itemTpl,
             ParentId = "hideout", // Should always be "hideout"
             SlotId = "hideout", // Should always be "hideout"
