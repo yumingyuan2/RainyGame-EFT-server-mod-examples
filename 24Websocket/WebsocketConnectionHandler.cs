@@ -1,14 +1,15 @@
-﻿using System.Net.WebSockets;
-using System.Text;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Servers.Ws;
-using SPTarkov.DI.Annotations;
-using SPTarkov.Server.Core.Models.Spt.Mod;
+using System.Net.WebSockets;
+using System.Text;
 
 namespace _24Websocket;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "websocket.6870fccfb9b3615d166ebbb8";
     public override string Name { get; set; } = "CustomWebSocketConnectionHandlerExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

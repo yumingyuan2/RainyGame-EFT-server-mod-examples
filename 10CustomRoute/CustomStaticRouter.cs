@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Utils;
@@ -16,6 +17,7 @@ namespace _10CustomRoute;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "customroute.6870ceefe659e12494df79f4";
     public override string Name { get; set; } = "CustomStaticRouterExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
@@ -62,7 +64,7 @@ public class CustomStaticRouter : StaticRouter
         ];
     }
 
-    private static ValueTask<string> HandleRoute(string url, ExampleStaticRequestData info, string sessionId)
+    private static ValueTask<string> HandleRoute(string url, ExampleStaticRequestData info, MongoId sessionId)
     {
         // Your mods code goes here
 

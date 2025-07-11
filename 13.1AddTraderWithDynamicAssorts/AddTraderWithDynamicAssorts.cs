@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using SPTarkov.DI.Annotations;
+﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
@@ -11,12 +10,14 @@ using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Services;
 using SPTarkov.Server.Core.Utils;
+using System.Reflection;
 using Path = System.IO.Path;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "addtraderdynamicassorts.6870d11fd2b2a0557900a53c";
     public override string Name { get; set; } = "AddTraderWithDynamicAssortsExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; } = ["Clodan", "CWX"];

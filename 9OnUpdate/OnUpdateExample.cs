@@ -1,7 +1,7 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
-using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Models.Spt.Mod;
+using SPTarkov.Server.Core.Models.Utils;
 
 namespace _9OnUpdate;
 
@@ -15,6 +15,7 @@ namespace _9OnUpdate;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "onupdate.6870ced702620776e95828b2";
     public override string Name { get; set; } = "OnUpdateExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

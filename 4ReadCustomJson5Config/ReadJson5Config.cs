@@ -1,10 +1,10 @@
-﻿using SPTarkov.Server.Core.Helpers;
-using System.Reflection;
-using SPTarkov.Server.Core.Models.Utils;
-using fastJSON5;
+﻿using fastJSON5;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Spt.Mod;
+using SPTarkov.Server.Core.Models.Utils;
+using System.Reflection;
 
 namespace _4ReadCustomJson5Config;
 
@@ -18,6 +18,7 @@ namespace _4ReadCustomJson5Config;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "readjson5config.6870c3e3aad58f19c67b14e1";
     public override string Name { get; set; } = "ReadJson5ConfigExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

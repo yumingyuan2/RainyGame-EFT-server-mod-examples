@@ -1,7 +1,7 @@
-﻿using SPTarkov.Server.Core.DI;
-using SPTarkov.Server.Core.Models.Utils;
-using SPTarkov.DI.Annotations;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Spt.Mod;
+using SPTarkov.Server.Core.Models.Utils;
 
 namespace _8OnLoad;
 
@@ -15,6 +15,7 @@ namespace _8OnLoad;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "onload.6870c52076c4e995517ece1c";
     public override string Name { get; set; } = "OnLoadExampleExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

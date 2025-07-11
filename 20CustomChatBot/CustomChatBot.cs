@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.Helpers.Dialogue;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Dialog;
 using SPTarkov.Server.Core.Models.Eft.Profile;
 using SPTarkov.Server.Core.Models.Enums;
@@ -10,6 +11,7 @@ namespace _20CustomChatBot;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "customchatbot.6870fc5c0680d79924b8ec0c";
     public override string Name { get; set; } = "CustomChatBotExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
@@ -45,7 +47,7 @@ public class CustomChatBot(
         };
     }
 
-    public ValueTask<string> HandleMessage(string sessionId, SendMessageRequest request)
+    public ValueTask<string> HandleMessage(MongoId sessionId, SendMessageRequest request)
     {
         mailSendService.SendUserMessageToPlayer(
             sessionId,

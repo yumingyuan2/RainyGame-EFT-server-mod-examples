@@ -18,6 +18,7 @@ namespace _6OverrideMethod;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "overridemethod.6870c483bad1c6d60765702b";
     public override string Name { get; set; } = "OverrideMethodExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

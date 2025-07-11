@@ -1,6 +1,7 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Helpers.Dialog.Commando.SptCommands;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Dialog;
 using SPTarkov.Server.Core.Models.Eft.Profile;
 using SPTarkov.Server.Core.Models.Spt.Mod;
@@ -10,6 +11,7 @@ namespace _22CustomSptCommand;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "customsptcommand.6870fc98292f7983f5f791cb";
     public override string Name { get; set; } = "CustomCommandoCommandExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
@@ -29,21 +31,15 @@ public class CustomSptCommand(
     MailSendService mailSendService,
     ItemHelper itemHelper) : ISptCommand
 {
-    public string GetCommand()
-    {
-        return "getName";
-    }
-
-    public string GetCommandHelp()
-    {
-        return "Usage: spt getName tplId";
-    }
-
-    public ValueTask<string> PerformAction(UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public ValueTask<string> PerformAction(UserDialogInfo commandHandler, MongoId sessionId, SendMessageRequest request)
     {
         var splitCommand  = request.Text.Split(" ");
         mailSendService.SendUserMessageToPlayer(sessionId, commandHandler, $"That templateId belongs to item {itemHelper.GetItem(splitCommand[2]).Value?.Properties?.Name ?? ""}");
         
         return ValueTask.FromResult(request.DialogId);
     }
+
+    public string Command => "getName";
+
+    public string CommandHelp => "Usage: spt getName tplId";
 }

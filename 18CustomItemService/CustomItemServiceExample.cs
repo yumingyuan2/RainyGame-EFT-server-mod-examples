@@ -1,14 +1,15 @@
-﻿using SPTarkov.Server.Core.Models.Eft.Common.Tables;
+﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services.Mod;
-using SPTarkov.DI.Annotations;
-using SPTarkov.Server.Core.DI;
 
 namespace _18CustomItemService;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "customitem.6870d2d3ca588a42ea0f93c7";
     public override string Name { get; set; } = "CustomItemServiceExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

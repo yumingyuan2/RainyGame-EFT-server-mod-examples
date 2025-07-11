@@ -6,6 +6,7 @@ namespace _15HttpListenerExample;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "httplistener.6870d292a830085ca7d86c54";
     public override string Name { get; set; } = "HttpListenerExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

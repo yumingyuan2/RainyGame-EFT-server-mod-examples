@@ -18,6 +18,7 @@ namespace _6._1OverrideMethodHarmony;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "overridemethodharmony.6870c447103ad3daed8a9baf";
     public override string Name { get; set; } = "OverrideMethodHarmonyExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

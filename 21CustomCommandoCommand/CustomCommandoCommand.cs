@@ -1,5 +1,6 @@
 ﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Dialog;
 using SPTarkov.Server.Core.Models.Eft.Profile;
 using SPTarkov.Server.Core.Models.Spt.Mod;
@@ -10,6 +11,7 @@ namespace _21CustomCommandoCommand;
 
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "customcommandocommand.6870fc7bf59ddcc1469cceda";
     public override string Name { get; set; } = "CustomCommandoCommandExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
@@ -29,11 +31,6 @@ public class CustomCommandoCommand(
     DatabaseServer databaseServer,
     MailSendService mailSendService) : IChatCommand
 {
-    public string GetCommandPrefix()
-    {
-        return "test";
-    }
-
     public string GetCommandHelp(string command)
     {
         if (command == "talk")
@@ -44,12 +41,7 @@ public class CustomCommandoCommand(
         return null;
     }
 
-    public List<string> GetCommands()
-    {
-        return ["talk"];
-    }
-
-    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, MongoId sessionId, SendMessageRequest request)
     {
         if (command == "talk")
         {
@@ -59,4 +51,7 @@ public class CustomCommandoCommand(
 
         return new ValueTask<string>(string.Empty);
     }
+
+    public string CommandPrefix { get; }
+    public List<string> Commands => ["talk"];
 }

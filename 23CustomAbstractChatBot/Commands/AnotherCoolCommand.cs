@@ -1,4 +1,5 @@
 using SPTarkov.Server.Core.Helpers.Dialog.Commando;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Dialog;
 using SPTarkov.Server.Core.Models.Eft.Profile;
 using SPTarkov.Server.Core.Services;
@@ -16,12 +17,7 @@ public class AnotherCoolCommand : IChatCommand
         _mailSendService = mailSendService;
     }
 
-    public string GetCommandPrefix()
-    {
-        return "anotherExample";
-    }
-
-    public string GetCommandHelp(string command)
+    public string? GetCommandHelp(string command)
     {
         if (command == "test")
         {
@@ -31,12 +27,10 @@ public class AnotherCoolCommand : IChatCommand
         return null;
     }
 
-    public List<string> GetCommands()
-    {
-        return ["test"];
-    }
+    public string CommandPrefix => "anotherExample";
+    public List<string> Commands => ["test"];
 
-    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, string sessionId, SendMessageRequest request)
+    public ValueTask<string> Handle(string command, UserDialogInfo commandHandler, MongoId sessionId, SendMessageRequest request)
     {
         if (command == "test")
         {

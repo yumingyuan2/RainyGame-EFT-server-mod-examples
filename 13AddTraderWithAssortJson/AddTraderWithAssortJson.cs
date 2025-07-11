@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using SPTarkov.DI.Annotations;
+﻿using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
@@ -8,6 +7,7 @@ using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Servers;
 using SPTarkov.Server.Core.Utils;
+using System.Reflection;
 using Path = System.IO.Path;
 
 namespace _13AddTraderWithAssortJson;
@@ -15,6 +15,7 @@ namespace _13AddTraderWithAssortJson;
 // This record holds the various properties for your mod
 public record ModMetadata : AbstractModMetadata
 {
+    public override string ModId { get; set; } = "addtraderjsonassorts.6870d1d3f83f3ea3b4192b56";
     public override string Name { get; set; } = "AddTraderWithAssortJsonExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; } = ["Clodan", "CWX"];
