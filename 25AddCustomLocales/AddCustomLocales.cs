@@ -8,7 +8,7 @@ namespace _25AddCustomLocales;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "customlocales.6870fce2fec56cded28420d2";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.customlocales";
     public override string Name { get; set; } = "AddCustomLocalesExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

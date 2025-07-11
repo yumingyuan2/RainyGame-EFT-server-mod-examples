@@ -11,7 +11,7 @@ namespace _20CustomChatBot;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "customchatbot.6870fc5c0680d79924b8ec0c";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.customchatbot";
     public override string Name { get; set; } = "CustomChatBotExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

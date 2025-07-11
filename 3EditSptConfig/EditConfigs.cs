@@ -18,7 +18,7 @@ namespace _3EditSptConfig;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "editsptconfig.6870c382923546b18273fe95";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.editsptconfig";
     public override string Name { get; set; } = "EditConfigsExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
