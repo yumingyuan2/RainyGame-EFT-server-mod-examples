@@ -20,11 +20,10 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     /// Any string can be used for a modId, but it should ideally be unique and not easily duplicated
     /// a 'bad' ID would be: "mymod", "mod1", "questmod"
-    /// Optionality, you can add a mongoId to the end of the id to make it extra unique
-    /// use : https://observablehq.com/@hugodf/mongodb-objectid-generator
-    /// or: https://nddapp.com/object-id-generator.html
+    /// It is recommended (but not mandatory) to use the reverse domain name notation,
+    /// see: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
     /// </summary>
-    public override string ModId { get; set; } = "editdatabase.6870c13c805959c35694f8b9";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.editdatabase";
     public override string Name { get; set; } = "EditDatabaseExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

@@ -17,7 +17,7 @@ namespace _13._1AddTraderWithDynamicAssorts;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "addtraderdynamicassorts.6870d11fd2b2a0557900a53c";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.addtraderdynamicassorts";
     public override string Name { get; set; } = "AddTraderWithDynamicAssortsExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; } = ["Clodan", "CWX"];

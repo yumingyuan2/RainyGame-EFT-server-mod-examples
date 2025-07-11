@@ -15,7 +15,7 @@ namespace _13AddTraderWithAssortJson;
 // This record holds the various properties for your mod
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "addtraderjsonassorts.6870d1d3f83f3ea3b4192b56";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.addtraderjsonassorts";
     public override string Name { get; set; } = "AddTraderWithAssortJsonExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; } = ["Clodan", "CWX"];

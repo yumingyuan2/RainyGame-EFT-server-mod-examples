@@ -15,7 +15,7 @@ namespace _9OnUpdate;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "onupdate.6870ced702620776e95828b2";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.onupdate";
     public override string Name { get; set; } = "OnUpdateExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

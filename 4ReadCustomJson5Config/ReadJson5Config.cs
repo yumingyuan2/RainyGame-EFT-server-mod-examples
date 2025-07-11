@@ -18,7 +18,7 @@ namespace _4ReadCustomJson5Config;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "readjson5config.6870c3e3aad58f19c67b14e1";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.readjson5config";
     public override string Name { get; set; } = "ReadJson5ConfigExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

@@ -17,7 +17,7 @@ namespace _10CustomRoute;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "customroute.6870ceefe659e12494df79f4";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.customroute";
     public override string Name { get; set; } = "CustomStaticRouterExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

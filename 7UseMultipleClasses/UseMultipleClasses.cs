@@ -7,7 +7,7 @@ namespace _7UseMultipleClasses;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "multipleclasses.6870c4a9c0d7e7b76f5aeeeb";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.multipleclasses";
     public override string Name { get; set; } = "UseMultipleClassesExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

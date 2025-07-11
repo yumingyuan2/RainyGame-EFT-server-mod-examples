@@ -12,7 +12,7 @@ namespace _18._1CustomItemServiceLootBox;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "customitemlootbox.6870d2b5b8301c91ede957c4";
+    public override string ModId { get; set; } = "com.sp-tarkov.examples.customitemlootbox";
     public override string Name { get; set; } = "CustomItemServiceLootBoxExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
