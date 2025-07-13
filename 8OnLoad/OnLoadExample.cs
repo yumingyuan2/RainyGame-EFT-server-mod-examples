@@ -15,7 +15,7 @@ namespace _8OnLoad;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "com.sp-tarkov.examples.onload";
+    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.onload";
     public override string Name { get; set; } = "OnLoadExampleExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
