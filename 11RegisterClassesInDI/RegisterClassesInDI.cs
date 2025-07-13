@@ -15,7 +15,7 @@ namespace _11RegisterClassesInDI;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "com.sp-tarkov.examples.registerclassesindi";
+    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.registerclassesindi";
     public override string Name { get; set; } = "RegisterClassesInDIExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

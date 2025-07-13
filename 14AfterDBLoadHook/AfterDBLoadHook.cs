@@ -11,7 +11,7 @@ namespace _14AfterDBLoadHook;
 
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModId { get; set; } = "com.sp-tarkov.examples.afterdbhook";
+    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.afterdbhook";
     public override string Name { get; set; } = "AfterDBLoadHookExample";
     public override string Author { get; set; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }

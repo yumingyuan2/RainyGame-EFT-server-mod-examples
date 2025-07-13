@@ -22,7 +22,7 @@ public record ModMetadata : AbstractModMetadata
     /// It is recommended (but not mandatory) to use the reverse domain name notation,
     /// see: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
     /// </summary>
-    public override string ModId { get; set; } = "com.sp-tarkov.examples.logging";
+    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.logging";
 
     /// <summary>
     /// The name of your mod
