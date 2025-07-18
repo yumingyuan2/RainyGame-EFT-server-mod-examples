@@ -21,12 +21,12 @@ public record ModMetadata : AbstractModMetadata
     public override string? Licence { get; set; } = "MIT";
 }
 
-[Injectable]
+[Injectable(TypePriority = 0)]
 public class HttpListenerExample : IHttpListener
 {
     public bool CanHandle(string sessionId, HttpRequest req)
     {
-        return req.Method == "GET" && req.Method.Contains("/type-custom-url");
+        return req.Method == "GET" && req.Path.Value!.Contains("/type-custom-url");
     }
 
     public async Task Handle(string sessionId, HttpRequest req, HttpResponse resp)
