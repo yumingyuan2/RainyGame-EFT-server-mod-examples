@@ -1,4 +1,5 @@
 using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Servers.Http;
 
@@ -24,12 +25,12 @@ public record ModMetadata : AbstractModMetadata
 [Injectable(TypePriority = 0)]
 public class HttpListenerExample : IHttpListener
 {
-    public bool CanHandle(string sessionId, HttpRequest req)
+    public bool CanHandle(MongoId sessionId, HttpRequest req)
     {
         return req.Method == "GET" && req.Path.Value!.Contains("/type-custom-url");
     }
 
-    public async Task Handle(string sessionId, HttpRequest req, HttpResponse resp)
+    public async Task Handle(MongoId sessionId, HttpRequest req, HttpResponse resp)
     {
         resp.StatusCode = 200;
         await resp.Body.WriteAsync("[1] This is the first example of a mod hooking into the HttpServer"u8.ToArray());

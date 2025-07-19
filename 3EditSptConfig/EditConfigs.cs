@@ -95,7 +95,15 @@ public class EditConfigs(
         _botConfig.DisableLootOnBotTypes.Add("assault");
 
         // Lets make PMCs carry absurdly expensive loot in their pockets
-        _pmcConfig.MaxPocketLootTotalRub = 99999999;
+        _pmcConfig.LootSettings.Pocket.TotalRubByLevel =
+        [
+            new MinMaxLootValue
+            {
+                Min = 1,
+                Max = 99,
+                Value = 9999999
+            }
+        ];
 
         logger.Success("Finished Editing Configs");
 

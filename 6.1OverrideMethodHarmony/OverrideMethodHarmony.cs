@@ -52,7 +52,7 @@ public class StartAsyncPatch : AbstractPatch
 {
     protected override MethodBase GetTargetMethod()
     {
-        return typeof(App).GetMethod(nameof(App.StartAsync));
+        return typeof(App).GetMethod(nameof(App.InitializeAsync));
     }
 
     [PatchPrefix]
@@ -63,14 +63,14 @@ public class StartAsyncPatch : AbstractPatch
 
         // You can perform any code here before the method actually runs
 
-        // This runs the original method, can be set to false, skipping the original method.
+        // This runs the original method, can be set to false, skipping the original method
         return true;
     }
 
     [PatchPostfix]
     public static async Task Postfix(Task __result)
     {
-        // Optionally here you could modify the result after it has run, or run code afterwards.
+        // Optionally here you could modify the result after it has run, or run code afterwards
         ServiceLocator.ServiceProvider.GetService<ISptLogger<App>>().Success("StartAsync harmony patch OnLoad has ran!");
 
         // Have to await a result here because of async, this will not be necessary on a non-async method
