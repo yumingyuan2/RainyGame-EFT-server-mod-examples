@@ -22,17 +22,17 @@ public record ModMetadata : AbstractModMetadata
     /// It is recommended (but not mandatory) to use the reverse domain name notation,
     /// see: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
     /// </summary>
-    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.logging";
+    public override string ModGuid { get; init; } = "com.sp-tarkov.examples.logging";
 
     /// <summary>
     /// The name of your mod
     /// </summary>
-    public override string Name { get; set; } = "LoggingExample";
+    public override string Name { get; init; } = "LoggingExample";
 
     /// <summary>
     /// Who created the mod (you!)
     /// </summary>
-    public override string Author { get; set; } = "SPTarkov";
+    public override string Author { get; init; } = "SPTarkov";
 
     /// <summary>
     /// A list of people who helped you create the mod
@@ -42,12 +42,12 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     ///  The version of the mod, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override string Version { get; set; } = "1.0.0";
+    public override string Version { get; init; } = "1.0.0";
 
     /// <summary>
     /// What version of SPT is your mod made for, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override string SptVersion { get; set; } = "4.0.0";
+    public override string SptVersion { get; init; } = "4.0.0";
 
     /// <summary>
     /// ModIds that should load BEFORE your mod
@@ -82,7 +82,7 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     /// What Licence does your mod use
     /// </summary>
-    public override string? Licence { get; set; } = "MIT";
+    public override string? License { get; init; } = "MIT";
 }
 
 // We want to load after PreSptModLoader is complete, so we set our type priority to that, plus 1.

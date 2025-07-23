@@ -18,19 +18,19 @@ namespace _4ReadCustomJson5Config;
 /// </summary>
 public record ModMetadata : AbstractModMetadata
 {
-    public override string ModGuid { get; set; } = "com.sp-tarkov.examples.readjson5config";
-    public override string Name { get; set; } = "ReadJson5ConfigExample";
-    public override string Author { get; set; } = "SPTarkov";
+    public override string ModGuid { get; init; } = "com.sp-tarkov.examples.readjson5config";
+    public override string Name { get; init; } = "ReadJson5ConfigExample";
+    public override string Author { get; init; } = "SPTarkov";
     public override List<string>? Contributors { get; set; }
-    public override string Version { get; set; } = "1.0.0";
-    public override string SptVersion { get; set; } = "4.0.0";
+    public override string Version { get; init; } = "1.0.0";
+    public override string SptVersion { get; init; } = "4.0.0";
     public override List<string>? LoadBefore { get; set; }
     public override List<string>? LoadAfter { get; set; }
     public override List<string>? Incompatibilities { get; set; }
     public override Dictionary<string, string>? ModDependencies { get; set; }
     public override string? Url { get; set; }
     public override bool? IsBundleMod { get; set; }
-    public override string? Licence { get; set; } = "MIT";
+    public override string? License { get; init; } = "MIT";
 }
 
 // We want to load after PreSptModLoader is complete, so we set our type priority to that, plus 1.
