@@ -54,11 +54,11 @@ namespace _13._1AddTraderWithDynamicAssorts
             {
                 Assort = emptyTraderItemAssortObject,
                 Base = cloner.Clone(traderDetailsToAdd),
-                QuestAssort = new Dictionary<string, Dictionary<string, string>> // quest assort is empty as trader has no assorts unlocked by quests
+                QuestAssort = new() // quest assort is empty as trader has no assorts unlocked by quests
             {
-                { "Started", new Dictionary<string, string>() },
-                { "Success", new Dictionary<string, string>() },
-                { "Fail", new Dictionary<string, string>() }
+                { "Started", new() },
+                { "Success", new() },
+                { "Fail", new() }
             }
             };
 

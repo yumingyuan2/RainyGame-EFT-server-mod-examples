@@ -21,12 +21,12 @@ public record ModMetadata : AbstractModMetadata
     public override string Name { get; init; } = "AddTraderWithDynamicAssortsExample";
     public override string Author { get; init; } = "SPTarkov";
     public override List<string>? Contributors { get; set; } = ["Clodan", "CWX"];
-    public override string Version { get; init; } = "1.0.0";
-    public override string SptVersion { get; init; } = "4.0.0";
+    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
+    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
     public override List<string>? LoadBefore { get; set; }
     public override List<string>? LoadAfter { get; set; }
     public override List<string>? Incompatibilities { get; set; }
-    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
     public override string? Url { get; set; } = "https://github.com/sp-tarkov/server-mod-examples";
     public override bool? IsBundleMod { get; set; } = false;
     public override string? License { get; init; } = "MIT";

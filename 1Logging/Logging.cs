@@ -42,12 +42,12 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     ///  The version of the mod, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override string Version { get; init; } = "1.0.0";
+    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
 
     /// <summary>
     /// What version of SPT is your mod made for, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override string SptVersion { get; init; } = "4.0.0";
+    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
 
     /// <summary>
     /// ModIds that should load BEFORE your mod
@@ -67,7 +67,7 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     /// ModIds your mod REQUIRES to function
     /// </summary>
-    public override Dictionary<string, string>? ModDependencies { get; set; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
 
     /// <summary>
     /// Where to find your mod online
