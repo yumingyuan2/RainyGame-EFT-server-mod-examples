@@ -55,11 +55,12 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Assort = emptyTraderItemAssortObject,
                 Base = cloner.Clone(traderDetailsToAdd),
                 QuestAssort = new() // quest assort is empty as trader has no assorts unlocked by quests
-            {
-                { "Started", new() },
-                { "Success", new() },
-                { "Fail", new() }
-            }
+                {
+                    { "Started", new() },
+                    { "Success", new() },
+                    { "Fail", new() }
+                },
+                Dialogue = []
             };
 
             // Add the new trader id and data to the server

@@ -59,12 +59,13 @@ namespace _13AddTraderWithAssortJson
                 Assort = emptyTraderItemAssortObject,
                 Base = cloner.Clone(traderDetailsToAdd),
                 QuestAssort = new() // quest assort is empty as trader has no assorts unlocked by quests
-            {
-                // We create 3 empty arrays, one for each of the main statuses that are possible
-                { "Started", new() },
-                { "Success", new() },
-                { "Fail", new() }
-            }
+                {
+                    // We create 3 empty arrays, one for each of the main statuses that are possible
+                    { "Started", new() },
+                    { "Success", new() },
+                    { "Fail", new() }
+                },
+                Dialogue = []
             };
 
             // Add the new trader id and data to the server
