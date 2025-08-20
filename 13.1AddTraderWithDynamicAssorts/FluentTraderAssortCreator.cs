@@ -4,7 +4,6 @@ using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services;
-using SPTarkov.Server.Core.Utils;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
@@ -13,15 +12,14 @@ namespace _13._1AddTraderWithDynamicAssorts;
 /// </summary>
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class FluentTraderAssortCreator(
-    ISptLogger<AddTraderWithDynamicAssorts> logger,
-    DatabaseService databaseService,
-    HashUtil hashUtil)
+    ISptLogger<FluentTraderAssortCreator> logger,
+    DatabaseService databaseService)
 {
     private readonly List<Item> _itemsToSell = [];
     private readonly Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();
     private readonly Dictionary<string, int> _loyaltyLevel = new();
 
-    public FluentTraderAssortCreator CreateSingleAssortItem(string itemTpl, MongoId? itemId = null)
+    public FluentTraderAssortCreator CreateSingleAssortItem(MongoId itemTpl, MongoId? itemId = null)
     {
         // Create item ready for insertion into assort table
         var newItemToAdd = new Item
@@ -110,7 +108,7 @@ public class FluentTraderAssortCreator(
         return this;
     }
 
-    public FluentTraderAssortCreator AddBarterCost(string itemTpl, int count)
+    public FluentTraderAssortCreator AddBarterCost(MongoId itemTpl, int count)
     {
         var sellableItemId = _itemsToSell[0].Id;
 
@@ -151,13 +149,12 @@ public class FluentTraderAssortCreator(
     /// <summary>
     /// Store the generated assort in the server db against the desired trader
     /// </summary>
-    /// <param name="traderId">Id of trader to add assort to</param>
-    public FluentTraderAssortCreator? Export(string traderId)
+    /// <param name="traderAssortToAddItemTo">Assort to add generated item into</param>
+    public FluentTraderAssortCreator? Export(TraderAssort traderAssortToAddItemTo)
     {
-        var traderData = databaseService.GetTables().Traders.GetValueOrDefault(traderId);
 
         var rootItemAddedId = _itemsToSell.FirstOrDefault().Id;
-        if (traderData.Assort.Items.Exists(x => x.Id == rootItemAddedId))
+        if (traderAssortToAddItemTo.Items.Exists(x => x.Id == rootItemAddedId))
         {
             logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already in use");
 
@@ -168,9 +165,9 @@ public class FluentTraderAssortCreator(
             return null;
         }
 
-        traderData.Assort.Items.AddRange(_itemsToSell);
-        traderData.Assort.BarterScheme[rootItemAddedId] = _barterScheme[rootItemAddedId];
-        traderData.Assort.LoyalLevelItems[rootItemAddedId] = _loyaltyLevel[rootItemAddedId];
+        traderAssortToAddItemTo.Items.AddRange(_itemsToSell);
+        traderAssortToAddItemTo.BarterScheme[rootItemAddedId] = _barterScheme[rootItemAddedId];
+        traderAssortToAddItemTo.LoyalLevelItems[rootItemAddedId] = _loyaltyLevel[rootItemAddedId];
 
         _itemsToSell.Clear();
         _barterScheme.Clear();

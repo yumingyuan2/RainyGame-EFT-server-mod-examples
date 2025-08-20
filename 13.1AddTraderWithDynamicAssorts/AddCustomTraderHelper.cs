@@ -117,8 +117,8 @@ namespace _13._1AddTraderWithDynamicAssorts
             { // Add the base weapon first
                 Id =
                 NewItemIds.GLOCK_BASE, // Ids matter, Ids MUST be unique for every item
-                Template =
-                "5a7ae0c351dfba0017554310", // This is the weapons tpl, found on: https://db.sp-tarkov.com/search
+                Template = new MongoId("5a7ae0c351dfba0017554310")
+                , // This is the weapons tpl, found on: https://db.sp-tarkov.com/search
             });
 
             // Add barrel
@@ -126,10 +126,9 @@ namespace _13._1AddTraderWithDynamicAssorts
             {
                 Id =
                 NewItemIds.GLOCK_BARREL,
-                Template =
-                "5a6b60158dc32e000a31138b",
+                Template = new MongoId("5a6b60158dc32e000a31138b"),
                 ParentId =
-                NewItemIds.GLOCK_BASE, // This is a sub item, you need to define its parent its attached to / inserted into
+                NewItemIds.GLOCK_BASE, // This is a sub item, you need to define its parent it is attached to / inserted into
                 SlotId =
                 "mod_barrel", // Required for mods, you need to define what 'slot' the mod will fill on the weapon
             });
@@ -139,8 +138,7 @@ namespace _13._1AddTraderWithDynamicAssorts
             {
                 Id =
                 NewItemIds.GLOCK_RECIEVER,
-                Template =
-                "5a9685b1a2750c0032157104",
+                Template = new MongoId("5a9685b1a2750c0032157104"),
                 ParentId =
                 NewItemIds.GLOCK_BASE,
                 SlotId =
@@ -153,7 +151,7 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Id =
                 NewItemIds.GLOCK_COMPENSATOR,
                 Template =
-                "5a7b32a2e899ef00135e345a",
+                new MongoId("5a7b32a2e899ef00135e345a"),
                 ParentId =
                 NewItemIds.GLOCK_RECIEVER, // The parent of this mod is the receiver NOT weapon, be careful to get the correct parent
                 SlotId =
@@ -166,7 +164,7 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Id =
                 NewItemIds.GLOCK_PISTOL_GRIP,
                 Template =
-                "5a7b4960e899ef197b331a2d",
+                new MongoId("5a7b4960e899ef197b331a2d"),
                 ParentId =
                 NewItemIds.GLOCK_BASE,
                 SlotId =
@@ -179,7 +177,7 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Id =
                 NewItemIds.GLOCK_FRONT_SIGHT,
                 Template =
-                "5a6f5d528dc32e00094b97d9",
+                new MongoId("5a6f5d528dc32e00094b97d9"),
                 ParentId =
                 NewItemIds.GLOCK_RECIEVER,
                 SlotId =
@@ -192,7 +190,7 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Id =
                 NewItemIds.GLOCK_REAR_SIGHT,
                 Template =
-                "5a6f58f68dc32e000a311390",
+                new MongoId("5a6f58f68dc32e000a311390"),
                 ParentId =
                 NewItemIds.GLOCK_RECIEVER,
                 SlotId =
@@ -205,7 +203,7 @@ namespace _13._1AddTraderWithDynamicAssorts
                 Id =
                 NewItemIds.GLOCK_MAGAZINE,
                 Template =
-                "630769c4962d0247b029dc60",
+                new MongoId("630769c4962d0247b029dc60"),
                 ParentId =
                 NewItemIds.GLOCK_BASE,
                 SlotId =
@@ -214,5 +212,18 @@ namespace _13._1AddTraderWithDynamicAssorts
 
             return glock;
         }
+    }
+
+    // These are unique IDs we've generated earlier to save time when adding the glock
+    public static class NewItemIds
+    {
+        public static string GLOCK_BASE = "66eeef3b2a166b73d2066a74";
+        public static string GLOCK_BARREL = "66eeef3b2a166b73d2066a75";
+        public static string GLOCK_RECIEVER = "66eeef3b2a166b73d2066a76";
+        public static string GLOCK_COMPENSATOR = "66eeef3b2a166b73d2066a77";
+        public static string GLOCK_PISTOL_GRIP = "66eeef3b2a166b73d2066a78";
+        public static string GLOCK_REAR_SIGHT = "66eeef3b2a166b73d2066a79";
+        public static string GLOCK_FRONT_SIGHT = "66eeef3b2a166b73d2066a7a";
+        public static string GLOCK_MAGAZINE = "66eeef3b2a166b73d2066a7b";
     }
 }
