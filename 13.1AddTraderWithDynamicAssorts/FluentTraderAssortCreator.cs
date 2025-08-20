@@ -3,7 +3,6 @@ using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Utils;
-using SPTarkov.Server.Core.Services;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
@@ -12,8 +11,7 @@ namespace _13._1AddTraderWithDynamicAssorts;
 /// </summary>
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class FluentTraderAssortCreator(
-    ISptLogger<FluentTraderAssortCreator> logger,
-    DatabaseService databaseService)
+    ISptLogger<FluentTraderAssortCreator> logger)
 {
     private readonly List<Item> _itemsToSell = [];
     private readonly Dictionary<string, List<List<BarterScheme>>> _barterScheme = new();

@@ -78,6 +78,15 @@ namespace _13._1AddTraderWithDynamicAssorts
             // Add localisation text for our trader to the database so it shows to people playing in different languages
             addCustomTraderHelper.AddTraderToLocales(_traderBase, "Cat", "This is the cat shop. Meow.");
 
+            // Create blank assort
+            _traderAssort = new TraderAssort
+            {
+                BarterScheme = new(),
+                Items = new(),
+                LoyalLevelItems = new(),
+                NextResupply = timeUtil.GetTimeStampOfNextHour()
+            };
+
             AddItemsToAssort();
         }
 
