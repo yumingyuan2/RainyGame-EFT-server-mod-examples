@@ -3,6 +3,7 @@ using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Utils;
+using SPTarkov.Server.Core.Services;
 
 namespace _13._1AddTraderWithDynamicAssorts;
 
@@ -11,6 +12,7 @@ namespace _13._1AddTraderWithDynamicAssorts;
 /// </summary>
 [Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class FluentTraderAssortCreator(
+    DatabaseService databaseService,
     ISptLogger<FluentTraderAssortCreator> logger)
 {
     private readonly List<Item> _itemsToSell = [];
@@ -147,12 +149,13 @@ public class FluentTraderAssortCreator(
     /// <summary>
     /// Store the generated assort in the server db against the desired trader
     /// </summary>
-    /// <param name="traderAssortToAddItemTo">Assort to add generated item into</param>
-    public FluentTraderAssortCreator? Export(TraderAssort traderAssortToAddItemTo)
+    /// <param name="traderId">Id of trader to add assort to</param>
+    public FluentTraderAssortCreator? Export(string traderId)
     {
+        var traderData = databaseService.GetTables().Traders.GetValueOrDefault(traderId);
 
         var rootItemAddedId = _itemsToSell.FirstOrDefault().Id;
-        if (traderAssortToAddItemTo.Items.Exists(x => x.Id == rootItemAddedId))
+        if (traderData.Assort.Items.Exists(x => x.Id == rootItemAddedId))
         {
             logger.Error($"Unable to add complex item with item key: {_itemsToSell[0].Id}, key already in use");
 
@@ -163,9 +166,9 @@ public class FluentTraderAssortCreator(
             return null;
         }
 
-        traderAssortToAddItemTo.Items.AddRange(_itemsToSell);
-        traderAssortToAddItemTo.BarterScheme[rootItemAddedId] = _barterScheme[rootItemAddedId];
-        traderAssortToAddItemTo.LoyalLevelItems[rootItemAddedId] = _loyaltyLevel[rootItemAddedId];
+        traderData.Assort.Items.AddRange(_itemsToSell);
+        traderData.Assort.BarterScheme[rootItemAddedId] = _barterScheme[rootItemAddedId];
+        traderData.Assort.LoyalLevelItems[rootItemAddedId] = _loyaltyLevel[rootItemAddedId];
 
         _itemsToSell.Clear();
         _barterScheme.Clear();

@@ -213,17 +213,4 @@ namespace _13._1AddTraderWithDynamicAssorts
             return glock;
         }
     }
-
-    // These are unique IDs we've generated earlier to save time when adding the glock
-    public static class NewItemIds
-    {
-        public static string GLOCK_BASE = "66eeef3b2a166b73d2066a74";
-        public static string GLOCK_BARREL = "66eeef3b2a166b73d2066a75";
-        public static string GLOCK_RECIEVER = "66eeef3b2a166b73d2066a76";
-        public static string GLOCK_COMPENSATOR = "66eeef3b2a166b73d2066a77";
-        public static string GLOCK_PISTOL_GRIP = "66eeef3b2a166b73d2066a78";
-        public static string GLOCK_REAR_SIGHT = "66eeef3b2a166b73d2066a79";
-        public static string GLOCK_FRONT_SIGHT = "66eeef3b2a166b73d2066a7a";
-        public static string GLOCK_MAGAZINE = "66eeef3b2a166b73d2066a7b";
-    }
 }
