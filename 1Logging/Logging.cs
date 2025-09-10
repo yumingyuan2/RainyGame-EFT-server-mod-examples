@@ -37,47 +37,37 @@ public record ModMetadata : AbstractModMetadata
     /// <summary>
     /// A list of people who helped you create the mod
     /// </summary>
-    public override List<string>? Contributors { get; set; }
+    public override List<string>? Contributors { get; init; }
 
     /// <summary>
     ///  The version of the mod, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
+    public override SemanticVersioning.Version Version { get; init; } = new("1.0.0");
 
     /// <summary>
     /// What version of SPT is your mod made for, follows SEMVER rules (https://semver.org/)
     /// </summary>
-    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
-
-    /// <summary>
-    /// ModIds that should load BEFORE your mod
-    /// </summary>
-    public override List<string>? LoadBefore { get; set; } = ["EditDatabaseExample"];
-
-    /// <summary>
-    /// ModIds that should load AFTER your mod
-    /// </summary>
-    public override List<string>? LoadAfter { get; set; }
+    public override SemanticVersioning.Version SptVersion { get; init; } = new("4.0.0");
 
     /// <summary>
     /// ModIds that you know cause problems with your mod
     /// </summary>
-    public override List<string>? Incompatibilities { get; set; }
+    public override List<string>? Incompatibilities { get; init; }
 
     /// <summary>
     /// ModIds your mod REQUIRES to function
     /// </summary>
-    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; init; }
 
     /// <summary>
     /// Where to find your mod online
     /// </summary>
-    public override string? Url { get; set; } = "https://github.com/sp-tarkov/server-mod-examples";
+    public override string? Url { get; init; } = "https://github.com/sp-tarkov/server-mod-examples";
 
     /// <summary>
     /// Does your mod load bundles? (e.g. new weapon/armor mods)
     /// </summary>
-    public override bool? IsBundleMod { get; set; } = false;
+    public override bool? IsBundleMod { get; init; } = false;
 
     /// <summary>
     /// What Licence does your mod use

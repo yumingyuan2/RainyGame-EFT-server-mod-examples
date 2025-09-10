@@ -18,15 +18,15 @@ public record ModMetadata : AbstractModMetadata
     public override string ModGuid { get; init; } = "com.sp-tarkov.examples.registerclassesindi";
     public override string Name { get; init; } = "RegisterClassesInDIExample";
     public override string Author { get; init; } = "SPTarkov";
-    public override List<string>? Contributors { get; set; }
-    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
-    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
-    public override List<string>? LoadBefore { get; set; }
-    public override List<string>? LoadAfter { get; set; }
-    public override List<string>? Incompatibilities { get; set; }
-    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
-    public override string? Url { get; set; }
-    public override bool? IsBundleMod { get; set; }
+    public override List<string>? Contributors { get; init; }
+    public override SemanticVersioning.Version Version { get; init; } = new("1.0.0");
+    public override SemanticVersioning.Version SptVersion { get; init; } = new("4.0.0");
+    
+    
+    public override List<string>? Incompatibilities { get; init; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; init; }
+    public override string? Url { get; init; }
+    public override bool? IsBundleMod { get; init; }
     public override string? License { get; init; } = "MIT";
 }
 

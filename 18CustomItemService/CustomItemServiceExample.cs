@@ -12,15 +12,15 @@ public record ModMetadata : AbstractModMetadata
     public override string ModGuid { get; init; } = "com.sp-tarkov.examples.customitem";
     public override string Name { get; init; } = "CustomItemServiceExample";
     public override string Author { get; init; } = "SPTarkov";
-    public override List<string>? Contributors { get; set; }
-    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
-    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
-    public override List<string>? LoadBefore { get; set; }
-    public override List<string>? LoadAfter { get; set; }
-    public override List<string>? Incompatibilities { get; set; }
-    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
-    public override string? Url { get; set; }
-    public override bool? IsBundleMod { get; set; }
+    public override List<string>? Contributors { get; init; }
+    public override SemanticVersioning.Version Version { get; init; } = new("1.0.0");
+    public override SemanticVersioning.Version SptVersion { get; init; } = new("4.0.0");
+    
+    
+    public override List<string>? Incompatibilities { get; init; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; init; }
+    public override string? Url { get; init; }
+    public override bool? IsBundleMod { get; init; }
     public override string? License { get; init; } = "MIT";
 }
 
@@ -58,7 +58,7 @@ public class CustomItemServiceExample(
                     }
                 }
             },
-            OverrideProperties = new Props
+            OverrideProperties = new TemplateItemProperties
             {
                 Chambers =
                 [
@@ -67,7 +67,7 @@ public class CustomItemServiceExample(
                         Name = "patron_in_weapon_000",
                         Id = "61f7c9e189e6fb1a5e3ea791",
                         Parent = "CustomMP18",
-                        Props = new SlotProps
+                        Properties = new SlotProperties
                         {
                             Filters =
                             [
@@ -97,7 +97,7 @@ public class CustomItemServiceExample(
                         },
                         Required = false,
                         MergeSlotWithChildren = false,
-                        Proto = "55d4af244bdc2d962f8b4571"
+                        Prototype = "55d4af244bdc2d962f8b4571"
                     }
                 ]
             },
