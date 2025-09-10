@@ -11,15 +11,15 @@ public record ModMetadata : AbstractModMetadata
     public override string ModGuid { get; init; } = "com.sp-tarkov.examples.customlocales";
     public override string Name { get; init; } = "AddCustomLocalesExample";
     public override string Author { get; init; } = "SPTarkov";
-    public override List<string>? Contributors { get; set; }
-    public override SemanticVersioning.Version Version { get; } = new("1.0.0");
-    public override SemanticVersioning.Version SptVersion { get; } = new("4.0.0");
-    public override List<string>? LoadBefore { get; set; }
-    public override List<string>? LoadAfter { get; set; }
-    public override List<string>? Incompatibilities { get; set; }
-    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; set; }
-    public override string? Url { get; set; }
-    public override bool? IsBundleMod { get; set; }
+    public override List<string>? Contributors { get; init; }
+    public override SemanticVersioning.Version Version { get; init; } = new("1.0.0");
+    public override SemanticVersioning.Version SptVersion { get; init; } = new("4.0.0");
+
+
+    public override List<string>? Incompatibilities { get; init; }
+    public override Dictionary<string, SemanticVersioning.Version>? ModDependencies { get; init; }
+    public override string? Url { get; init; }
+    public override bool? IsBundleMod { get; init; }
     public override string? License { get; init; } = "MIT";
 }
 
@@ -27,7 +27,8 @@ public record ModMetadata : AbstractModMetadata
 public class AddCustomLocales(
     ISptLogger<AddCustomLocales> logger,
     DatabaseService databaseService,
-    LocaleService localeService)
+    LocaleService localeService,
+    ServerLocalisationService serverLocalisationService)
     : IOnLoad
 {
     // Constructor - Inject a 'ISptLogger' with your mods Class inside the diamond brackets
@@ -55,6 +56,12 @@ public class AddCustomLocales(
         var _locales = localeService.GetLocaleDb("en");
         // Log this so we can see it in the console
         logger.Info(_locales["TestingLocales"]);
+
+        // Log by the locale key and output the language the player has set
+        // If the locale isn't found, it tries english
+        // If english isn't found, it shows the key
+        logger.Info(serverLocalisationService.GetText("TestingLocales"));
+
         logger.Info(_locales["Attention! This is a Beta version of Escape from Tarkov for testing purposes."]);
         return Task.CompletedTask;
     }
