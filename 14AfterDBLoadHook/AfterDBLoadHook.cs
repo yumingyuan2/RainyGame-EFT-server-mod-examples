@@ -1,7 +1,7 @@
 ﻿using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
-using SPTarkov.Server.Core.Models.External;
 using SPTarkov.Server.Core.Models.Logging;
 using SPTarkov.Server.Core.Models.Spt.Mod;
 using SPTarkov.Server.Core.Models.Utils;
@@ -26,30 +26,14 @@ public record ModMetadata : AbstractModMetadata
     public override string? License { get; init; } = "MIT";
 }
 
-
-/// <summary>
-/// <b>*** OBSOLETE WARNING! ***</b>
-/// <br/>
-/// Interfaces <i>IPostDBLoadMod</i> and <i>IPostSptLoadMod</i> used to be used in TS to load mods after the database finished loading.
-/// Although still provided as Async variants, these are now deprecated and should not be used.
-/// They will be removed in version 4.1.0 - please use <i>IOnLoad</i> instead with the desired Injectable(TypePriority) as below:
-/// </summary>
-/// <code>
-/// [Injectable(TypePriority = OnLoadOrder.Database + 1)]
-/// public class MyMod : IOnLoad
-/// {
-///   // ... implementation
-/// }
-/// </code>
-[Injectable]
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
 public class AfterDBLoadHook(
     DatabaseServer databaseServer,
-    ISptLogger<AfterDBLoadHook> logger)
-    : IPostDBLoadModAsync, IPostSptLoadModAsync
+    ISptLogger<AfterDBLoadHook> logger) : IOnLoad
 {
     private Dictionary<MongoId, TemplateItem>? _itemsDb;
 
-    public Task PostDBLoadAsync()
+    public Task OnLoad()
     {
         _itemsDb = databaseServer.GetTables().Templates.Items;
 
@@ -57,32 +41,47 @@ public class AfterDBLoadHook(
         // logic has modified anything yet. This is the DB loaded straight from the JSON files
         logger.LogWithColor($"Database item size: {_itemsDb.Count}", LogTextColor.Red, LogBackgroundColor.Yellow);
 
-        // lets do a quick modification and see how this reflect later on, on the postSptLoad()
+        // lets do a quick modification and see how this looks later on
         // find the nvgs item by its Id
         // this also checks if the item exists before giving you the item
         // if it doesn't, this if check will fail
-        if (_itemsDb.TryGetValue("5c0558060db834001b735271", out var nvgs))
+        if (_itemsDb.TryGetValue(ItemTpl.NIGHTVISION_L3HARRIS_GPNVG18_NIGHT_VISION_GOGGLES, out var nvgs))
         {
             // Lets log the state before the modification
-            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
+            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red,
+                LogBackgroundColor.Yellow);
+
             // Update one of its properties to be true
             nvgs.Properties.CanSellOnRagfair = true;
         }
-        
-        return Task.CompletedTask;
-    }
 
-    public Task PostSptLoadAsync()
-    {
-        // The modification we made above would have been processed by now by SPT, so any values we changed had
-        // already been passed through the initial lifecycles (OnLoad) of SPT.
-
-        if (_itemsDb.TryGetValue("5c0558060db834001b735271", out var nvgs))
-        {
-            // Lets log the state after the modification
-            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}", LogTextColor.Red, LogBackgroundColor.Yellow);
-        }
-        
         return Task.CompletedTask;
     }
 }
+
+[Injectable(TypePriority = OnLoadOrder.PostSptModLoader + 1)]
+public class AfterSptLoadHook(
+    DatabaseServer databaseServer,
+    ISptLogger<AfterDBLoadHook> logger) : IOnLoad
+{
+
+    private Dictionary<MongoId, TemplateItem>? _itemsDb;
+
+    public Task OnLoad()
+    {
+        _itemsDb = databaseServer.GetTables().Templates.Items;
+
+        // The modification we made above would have been processed by now by SPT, so any values we changed had
+        // already been passed through the initial lifecycles (OnLoad) of SPT.
+
+        if (_itemsDb.TryGetValue(ItemTpl.NIGHTVISION_L3HARRIS_GPNVG18_NIGHT_VISION_GOGGLES, out var nvgs))
+        {
+            // Lets log the state after the modification
+            logger.LogWithColor($"NVGs default CanSellOnRagfair: {nvgs.Properties.CanSellOnRagfair}",
+                LogTextColor.Red, LogBackgroundColor.Yellow);
+        }
+
+        return Task.CompletedTask;
+    }
+}
+
